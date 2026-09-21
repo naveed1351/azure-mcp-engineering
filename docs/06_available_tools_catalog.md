@@ -66,3 +66,28 @@ so you have an offline reference while working through the notebooks.
 | Azure CLI | `extension` | Find CLI commands and install instructions. |
 | Azure Developer CLI (azd) | `extension` | azd install instructions, deployment usage, azd MCP tools. |
 | Azure Load Testing | `loadtesting` | Create, run, and view load tests. |
+## DevOps
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure Bicep schema | `bicepschema` | Bicep schemas for IaC templates. |
+| Azure Deploy | `deploy` | Deploy and manage resources via templates/scripts. |
+| Azure Developer CLI | `extension` | azd usage for deployment scenarios. |
+| Azure Managed Grafana | `grafana` | List Grafana workspaces. |
+| Azure Monitor | `monitor` | Query logs and metrics. |
+| Azure Terraform | `azureterraform` | Provider docs, Azure Verified Modules, export-to-Terraform, policy validation. |
+| Azure Workbooks | `workbooks` | Create/manage/update Workbooks for visualization. |
+
+## Identity
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure RBAC | `role` | View and manage role-based access control assignments. |
+
+## Integration
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure Event Grid | `eventgrid` | Topics and subscriptions. |
+| Azure Native ISV (Datadog) | `datadog` | Monitoring/observability integration. |
+| Azure Service Bus | `servicebus` | Queues, topics, peek at messages. |
