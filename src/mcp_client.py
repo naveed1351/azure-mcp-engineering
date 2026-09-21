@@ -35,3 +35,34 @@ def build_server_params(
     if debug:
         args.append("--debug")
     return StdioServerParameters(command="npx", args=args, env=None)
+
+class AzureMcpClient:
+    """Async context manager wrapping an MCP ``ClientSession`` connected to
+    a locally-launched Azure MCP Server process.
+
+    Example
+    -------
+    >>> async with AzureMcpClient() as client:
+    ...     tools = await client.list_tools()
+    ...     result = await client.call_tool("azmcp_subscription_list", {})
+    """
+
+    def __init__(self, server_params: StdioServerParameters | None = None):
+        self.server_params = server_params or build_server_params()
+        self._stdio_ctx = None
+        self._session_ctx = None
+        self.session: ClientSession | None = None
+
+    async def __aenter__(self) -> "AzureMcpClient":
+        self._stdio_ctx = stdio_client(self.server_params)
+        read, write = await self._stdio_ctx.__aenter__()
+        self._session_ctx = ClientSession(read, write)
+        self.session = await self._session_ctx.__aenter__()
+        await self.session.initialize()
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb) -> None:
+        if self._session_ctx is not None:
+            await self._session_ctx.__aexit__(exc_type, exc, tb)
+        if self._stdio_ctx is not None:
+            await self._stdio_ctx.__aexit__(exc_type, exc, tb)
