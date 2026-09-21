@@ -25,3 +25,15 @@ Pick whichever tool you already use:
 
 After signing in, the Azure MCP Server can authenticate and run operations
 based on your permissions — there's no separate "MCP login" step.
+## RBAC: what determines what you can do
+
+The Azure MCP Server (and every tool it exposes) uses your Azure user
+credentials or managed identity, and access is enforced through Azure
+Role-Based Access Control (RBAC). If a tool call fails with an authorization
+error, the fix is almost always to grant your account the appropriate role
+(e.g., **Storage Blob Data Reader** to list blobs, **Key Vault Secrets User**
+to read secrets) rather than anything MCP-specific.
+
+> The local MCP server is intended strictly for developer use within your
+> organization. Don't use it for external applications or production
+> scenarios outside an approved development environment.
