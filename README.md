@@ -11,3 +11,27 @@ Azure resources using natural language, by implementing the open
 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). This repo
 walks through that story step by step using runnable Python scripts and
 Jupyter notebooks.
+## What you will learn
+
+- The fundamentals of the Model Context Protocol: hosts, clients, servers, and tools.
+- What the Azure MCP Server is, why it exists, and how it authenticates with Entra ID.
+- How to install and run the Azure MCP Server locally (npm, NuGet, PyPI, Docker).
+- How to write a Python MCP client that connects to the server over stdio.
+- How to list, inspect, and call Azure MCP Server tools directly.
+- How to wire the server into an Azure OpenAI function-calling loop to build a
+  natural-language Azure agent.
+- How to work with tools across Storage, Key Vault, Cosmos DB, SQL/MySQL/Postgres,
+  Monitor/Kusto, App Service, AKS, DevOps/deployment, and identity/RBAC namespaces.
+- Server modes (`namespace`, `consolidated`, `all`, `single`), read-only mode,
+  retries/timeouts, and "learn mode" tool discovery.
+- Security concepts: RBAC, elicitation (user confirmation for secrets), and tool
+  annotations (destructive / idempotent / read-only / secret / local-required).
+- Advanced patterns: multi-server MCP clients and composing custom workflows.
+
+### Prerequisites
+
+- An [Azure account](https://azure.microsoft.com/pricing/purchase-options/azure-account) with an active subscription (only needed to actually *run* the examples against real Azure resources; you can read the notebooks without one).
+- [Python 3.9+](https://www.python.org/downloads/)
+- [Node.js LTS](https://nodejs.org/) (used to launch the Azure MCP Server via `npx @azure/mcp@latest`)
+- The [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for `az login`
+- An Azure OpenAI resource (only needed for the function-calling notebooks)
