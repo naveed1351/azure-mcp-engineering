@@ -39,3 +39,19 @@ def get_settings() -> Settings:
         azure_subscription_id=os.getenv("AZURE_SUBSCRIPTION_ID"),
         azure_tenant_id=os.getenv("AZURE_TENANT_ID"),
     )
+
+def require_azure_openai(settings: Settings | None = None) -> Settings:
+    """Raise a friendly error if Azure OpenAI configuration is missing.
+
+    Notebooks that need Azure OpenAI (function-calling / agent examples)
+    should call this at the top of their setup cell instead of failing with
+    a raw ``KeyError`` or an opaque SDK exception.
+    """
+    settings = settings or get_settings()
+    if not settings.has_azure_openai:
+        raise RuntimeError(
+            "AZURE_OPENAI_ENDPOINT is not set. Copy .env.example to .env and "
+            "fill in your Azure OpenAI resource details before running this "
+            "notebook/example."
+        )
+    return settings
