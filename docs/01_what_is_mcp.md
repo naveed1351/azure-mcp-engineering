@@ -69,3 +69,8 @@ Kernel, or your own Python script — can call the same way.
 Because the protocol is transport-agnostic and language-agnostic, the same
 server can be driven from VS Code's chat UI *and* from a headless Python
 automation script, which is exactly what this repository demonstrates.
+## Further reading
+
+- [Model Context Protocol specification](https://modelcontextprotocol.io/)
+- [What Is the Azure MCP Server? (Microsoft Learn)](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/overview)
+- Next: [02_azure_mcp_server_overview.md](02_azure_mcp_server_overview.md)
