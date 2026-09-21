@@ -33,3 +33,7 @@ async def main(prompt: str) -> None:
 
         final = chat_with_tools(openai_client, settings.azure_openai_model, messages, tools)
         print(final.choices[0].message.content)
+
+if __name__ == "__main__":
+    user_prompt = " ".join(sys.argv[1:]) or "List my resource groups"
+    asyncio.run(main(user_prompt))
