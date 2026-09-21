@@ -37,3 +37,10 @@ exactly which destructive tools a workflow needs.
 ```python
 args=["-y", "@azure/mcp@latest", "server", "start", "--read-only"]
 ```
+## Exposing a single tool
+
+For the tightest possible integration surface, use `Mode=single` with
+`Tool=<tool-name>` to expose exactly one operation, e.g.
+`azmcp_storage_account_get`. This is useful when embedding Azure MCP Server
+capability inside another, narrowly scoped automation and you want to
+guarantee the model can't accidentally call anything else.
