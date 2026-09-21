@@ -30,3 +30,19 @@ and diagnostics parameters:
 These map naturally onto conversational prompts, e.g. "Set maximum retries to
 5 with a 3-second delay" or "Use learn mode to discover available parameters
 for this tool".
+## Tool annotations
+
+[Tool annotations](https://modelcontextprotocol.io/specification/2025-06-18/schema#toolannotations)
+are metadata hints describing a tool's behavior:
+
+| Annotation | Meaning |
+| --- | --- |
+| **Destructive** | Can delete or modify existing resources if `true`. |
+| **Idempotent** | Repeated calls with the same arguments have no additional side effects. |
+| **Open world** | Interacts with an unpredictable/dynamic set of entities (e.g. web search) vs. a closed, well-defined domain. |
+| **Read only** | Performs only read operations; never changes state. |
+| **Secret** | Response may contain sensitive data (secrets, keys) that should be sanitized before logging or forwarding to an LLM. |
+| **Local required** | Only available when the server runs locally over stdio, not in remote server modes. |
+
+You'll inspect these programmatically in
+[`notebooks/14_security_elicitation_rbac.ipynb`](../notebooks/14_security_elicitation_rbac.ipynb).
