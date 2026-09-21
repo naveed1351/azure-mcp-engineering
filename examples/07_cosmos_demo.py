@@ -12,3 +12,6 @@ async def main() -> None:
         accounts = await client.call_tool("azmcp_cosmos_account_list", {})
         print("Cosmos DB accounts:")
         print(accounts.content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
