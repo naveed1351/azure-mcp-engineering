@@ -40,3 +40,25 @@ def chat_with_tools(
     on every turn.
     """
     return client.chat.completions.create(model=model, messages=messages, tools=tools)
+
+def apply_tool_result(
+    messages: list[dict[str, Any]],
+    tool_call: Any,
+    result_content: Any,
+) -> None:
+    """Append a tool's result back onto the running message history in the
+    shape the chat completions API expects for a ``role: tool`` message.
+
+    ``result_content`` is typically ``CallToolResult.content`` from the MCP
+    SDK; it is stringified defensively since MCP content can be structured.
+    """
+    if not isinstance(result_content, str):
+        result_content = json.dumps(result_content, default=str)
+    messages.append(
+        {
+            "tool_call_id": tool_call.id,
+            "role": "tool",
+            "name": tool_call.function.name,
+            "content": result_content,
+        }
+    )
