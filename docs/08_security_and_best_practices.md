@@ -18,3 +18,17 @@ connection string into a chat transcript or log file. Treat
 `Disable user confirmation=true` the same way you'd treat disabling a
 production approval gate: only acceptable in fully automated, fully trusted
 pipelines where a human could never have intervened anyway.
+## Best practices checklist
+
+- ✅ Start every new agent/workflow with `--read-only` until you've verified
+  its prompts and tool choices behave as expected.
+- ✅ Scope namespaces (`--namespace storage --namespace monitor`, etc.) to the
+  minimum set a given workflow actually needs.
+- ✅ Prefer least-privilege RBAC roles (e.g. **Reader**, **Storage Blob Data
+  Reader**) over broad roles like **Contributor** or **Owner** for the
+  identity the agent runs as.
+- ✅ Leave elicitation enabled for anything touching secrets.
+- ✅ Log tool calls and their arguments (not their secret-bearing results) for
+  auditability.
+- ✅ Treat the local MCP server as a developer tool, not a production
+  service — don't expose it to untrusted callers or external users.
