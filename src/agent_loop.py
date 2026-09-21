@@ -52,3 +52,26 @@ class ConversationAgent:
 
         final = chat_with_tools(self.openai_client, self.model, self.messages, self._tools_schema)
         return final.choices[0].message.content or ""
+
+async def _main() -> None:
+    parser = argparse.ArgumentParser(description="Interactive Azure MCP Server agent")
+    parser.add_argument("--read-only", action="store_true", help="Disallow destructive Azure operations")
+    parser.add_argument("--namespace", action="append", default=None, help="Limit to one or more namespaces")
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO)
+    server_params = build_server_params(namespaces=args.namespace, read_only=args.read_only)
+
+    async with AzureMcpClient(server_params) as mcp_client:
+        agent = ConversationAgent(mcp_client)
+        print("Connected. Type a prompt (or 'exit' to quit).")
+        while True:
+            user_input = input("\nPrompt: ")
+            if user_input.strip().lower() in {"exit", "quit"}:
+                break
+            answer = await agent.run_turn(user_input)
+            print(answer)
+
+
+if __name__ == "__main__":
+    asyncio.run(_main())
