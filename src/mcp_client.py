@@ -93,3 +93,14 @@ class AzureMcpClient:
             }
             for tool in tools
         ]
+
+@asynccontextmanager
+async def connect(**kwargs: Any) -> AsyncIterator[AzureMcpClient]:
+    """Functional convenience wrapper: ``async with connect(read_only=True) as client``.
+
+    ``**kwargs`` are forwarded to :func:`build_server_params`, so common
+    calls look like ``connect(namespaces=["storage"], read_only=True)``.
+    """
+    server_params = build_server_params(**kwargs)
+    async with AzureMcpClient(server_params) as client:
+        yield client
