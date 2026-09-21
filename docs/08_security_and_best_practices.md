@@ -32,3 +32,16 @@ pipelines where a human could never have intervened anyway.
   auditability.
 - ✅ Treat the local MCP server as a developer tool, not a production
   service — don't expose it to untrusted callers or external users.
+## Common pitfalls
+
+- **Assuming the model won't call destructive tools** — always check a
+  tool's `Destructive` annotation before trusting a fully automated loop with
+  it (see [`notebooks/14_security_elicitation_rbac.ipynb`](../notebooks/14_security_elicitation_rbac.ipynb)).
+- **Hardcoding secrets in `.env` and committing them** — this repo's
+  [.gitignore](../.gitignore) excludes `.env`; always use
+  [`.env.example`](../.env.example) as the template instead.
+- **Running with an overly broad subscription-level role** just to avoid
+  RBAC troubleshooting — fix the actual role assignment instead.
+- **Disabling retries entirely** in production-like scenarios — transient
+  Azure API throttling is normal; exponential backoff (the default) handles
+  it gracefully.
