@@ -66,3 +66,30 @@ class AzureMcpClient:
             await self._session_ctx.__aexit__(exc_type, exc, tb)
         if self._stdio_ctx is not None:
             await self._stdio_ctx.__aexit__(exc_type, exc, tb)
+
+    async def list_tools(self) -> list[types.Tool]:
+        """Return every MCP tool exposed by the connected server."""
+        assert self.session is not None, "call inside 'async with AzureMcpClient()'"
+        response = await self.session.list_tools()
+        return response.tools
+
+    async def call_tool(self, name: str, arguments: dict[str, Any]) -> types.CallToolResult:
+        """Invoke a single tool by name with a dict of JSON-serializable arguments."""
+        assert self.session is not None, "call inside 'async with AzureMcpClient()'"
+        return await self.session.call_tool(name, arguments)
+
+    async def tools_as_openai_functions(self) -> list[dict[str, Any]]:
+        """Convert MCP tool definitions into the ``tools=`` schema expected by
+        the OpenAI / Azure OpenAI chat completions API."""
+        tools = await self.list_tools()
+        return [
+            {
+                "type": "function",
+                "function": {
+                    "name": tool.name,
+                    "description": tool.description,
+                    "parameters": tool.inputSchema,
+                },
+            }
+            for tool in tools
+        ]
