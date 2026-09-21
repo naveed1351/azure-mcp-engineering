@@ -35,3 +35,16 @@ for the exact image and flags.
 This repo doesn't require any of these — it talks to the server directly
 from Python — but they're the fastest way to try the tools conversationally
 before writing code.
+## Verifying your setup
+
+```powershell
+node --version      # Node.js LTS, needed for `npx @azure/mcp`
+python --version    # 3.9+
+az --version        # Azure CLI, needed for `az login`
+az account show     # confirms you're signed in and shows the active subscription
+npx -y @azure/mcp@latest --version   # sanity-check the server can be launched
+```
+
+Once these all succeed, continue to
+[04_authentication.md](04_authentication.md) to sign in, then
+[`notebooks/02_setting_up_azure_mcp_server.ipynb`](../notebooks/02_setting_up_azure_mcp_server.ipynb).
