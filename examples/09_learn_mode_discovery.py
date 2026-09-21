@@ -10,3 +10,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.mcp_client import connect
+
+async def main() -> None:
+    async with connect(namespaces=["storage"]) as client:
+        result = await client.call_tool(
+            "azmcp_storage_account_list",
+            {"learn": True},
+        )
+        print("Learn-mode metadata for azmcp_storage_account_list:")
+        print(result.content)
