@@ -35,3 +35,19 @@ Jupyter notebooks.
 - [Node.js LTS](https://nodejs.org/) (used to launch the Azure MCP Server via `npx @azure/mcp@latest`)
 - The [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for `az login`
 - An Azure OpenAI resource (only needed for the function-calling notebooks)
+## Repository structure
+
+```text
+azure-mcp-engineering/
+├── docs/                Conceptual reference notes, mirroring Microsoft Learn
+├── notebooks/           15 Jupyter notebooks, fundamentals -> advanced
+├── src/                 Reusable Python helper modules imported by the notebooks/examples
+├── examples/            Small, focused standalone scripts (run with `python examples/xx_name.py`)
+├── requirements.txt     Python dependencies for the whole course
+├── .env.example         Template for the environment variables the code expects
+└── README.md            You are here
+```
+
+Each notebook and example is self-contained but builds on the helpers in
+[`src/`](./src). Read `docs/` alongside the notebooks for the "why", and use
+the notebooks/examples for the "how".
