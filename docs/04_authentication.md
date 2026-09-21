@@ -37,3 +37,18 @@ to read secrets) rather than anything MCP-specific.
 > The local MCP server is intended strictly for developer use within your
 > organization. Don't use it for external applications or production
 > scenarios outside an approved development environment.
+## Global authentication parameters
+
+Every tool call accepts these optional parameters (in addition to its own):
+
+| Parameter | Description |
+| --- | --- |
+| **Subscription** | Azure subscription ID or name. Defaults to the Azure CLI profile's default subscription, or the `AZURE_SUBSCRIPTION_ID` env var. |
+| **Tenant Id** | Microsoft Entra tenant ID or display name. Defaults to your default tenant. |
+| **Authentication method** | `credential` (default, Azure CLI/managed identity), `key`, or `connectionString`. |
+
+Example prompts a client might translate into these parameters:
+
+- "Use subscription 'my-subscription-id' for all operations"
+- "Authenticate using tenant ID 'my-tenant-id'"
+- "Use 'credential' authentication for this session"
