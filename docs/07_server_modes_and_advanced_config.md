@@ -44,3 +44,17 @@ For the tightest possible integration surface, use `Mode=single` with
 `azmcp_storage_account_get`. This is useful when embedding Azure MCP Server
 capability inside another, narrowly scoped automation and you want to
 guarantee the model can't accidentally call anything else.
+## Retry, timeout, and learn mode configuration
+
+Retry behavior (`Maximum retries`, `Retry delay`, `Retry delay maximum`,
+`Retry mode`, `Retry network timeout`) and `Learn mode` are per-call
+parameters rather than server start flags — they can be set conversationally
+("Use exponential retry mode with a maximum of 4 retries and a 2-second
+delay") or programmatically as tool arguments. `Learn mode` is particularly
+useful during development: it makes a tool return its own command/parameter
+metadata instead of performing the real operation, so you can explore an
+unfamiliar namespace with zero risk. See
+[`notebooks/12_server_modes_namespaces.ipynb`](../notebooks/12_server_modes_namespaces.ipynb)
+and [`notebooks/13_error_handling_and_retries.ipynb`](../notebooks/13_error_handling_and_retries.ipynb).
+
+Next: [08_security_and_best_practices.md](08_security_and_best_practices.md)
