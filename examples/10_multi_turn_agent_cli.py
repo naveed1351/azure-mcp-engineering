@@ -16,3 +16,6 @@ import asyncio
 # All of the actual argument parsing / connection / loop logic lives in
 # src/agent_loop.py so it can be reused from notebooks too; this file is
 # intentionally just an entry point.
+
+if __name__ == "__main__":
+    asyncio.run(_main())
