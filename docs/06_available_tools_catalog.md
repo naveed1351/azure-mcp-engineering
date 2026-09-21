@@ -21,3 +21,29 @@ so you have an offline reference while working through the notebooks.
 | Azure AI Search | `search` | Manage search services, indexes, and queries. |
 | Azure Speech in Foundry Tools | `speech` | Speech-to-text / text-to-speech resources. |
 | Azure SRE Agent | `sreagent` | Agents, skills, connectors, incidents, workflows. |
+## Analytics
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure App Lens | `applens` | Diagnose and analyze application performance issues. |
+| Azure Data Explorer | `kusto` | Clusters, databases, tables, and KQL queries. |
+| Azure Event Hubs | `eventhubs` | Namespaces and event hubs. |
+
+## Compute
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure App Service | `appservice` | Web apps, DB connections, diagnostics, deployments, settings. |
+| Azure Functions | `functionapp` | List Azure Functions. |
+| Azure Kubernetes Service | `aks` | List AKS clusters. |
+| Azure Service Fabric | `servicefabric` | Managed clusters, node details, restarts. |
+| Azure Compute | `compute` | VMs, VM scale sets, managed disks. |
+
+## Containers
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure Container Registry | `acr` | List ACR instances. |
+| Azure Functions | `functionapp` | List Azure Functions. |
+| Azure Kubernetes Service | `aks` | List AKS clusters. |
+| Azure Service Fabric | `servicefabric` | Managed clusters, node details, restarts. |
