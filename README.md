@@ -77,3 +77,25 @@ jupyter notebook notebooks/
 
 You don't need to separately install the Azure MCP Server binary: the
 notebooks and examples launch it on demand via `npx -y @azure/mcp@latest`.
+## Learning path
+
+| # | Notebook | Topic | Related doc |
+| - | -------- | ----- | ------------ |
+| 1 | [01_introduction_to_mcp.ipynb](notebooks/01_introduction_to_mcp.ipynb) | MCP fundamentals: hosts, clients, servers | [docs/01_what_is_mcp.md](docs/01_what_is_mcp.md) |
+| 2 | [02_setting_up_azure_mcp_server.ipynb](notebooks/02_setting_up_azure_mcp_server.ipynb) | Installing & signing in | [docs/03_installation_and_setup.md](docs/03_installation_and_setup.md) |
+| 3 | [03_first_mcp_client_connection.ipynb](notebooks/03_first_mcp_client_connection.ipynb) | Your first stdio MCP client | [docs/04_authentication.md](docs/04_authentication.md) |
+| 4 | [04_exploring_available_tools.ipynb](notebooks/04_exploring_available_tools.ipynb) | Discovering tools | [docs/06_available_tools_catalog.md](docs/06_available_tools_catalog.md) |
+| 5 | [05_calling_tools_directly.ipynb](notebooks/05_calling_tools_directly.ipynb) | Calling tools without an LLM | [docs/05_tools_reference.md](docs/05_tools_reference.md) |
+| 6 | [06_azure_openai_function_calling.ipynb](notebooks/06_azure_openai_function_calling.ipynb) | Azure OpenAI function calling | [docs/02_azure_mcp_server_overview.md](docs/02_azure_mcp_server_overview.md) |
+| 7 | [07_building_a_conversational_agent.ipynb](notebooks/07_building_a_conversational_agent.ipynb) | A full conversational agent loop | — |
+| 8 | [08_storage_and_keyvault_tools.ipynb](notebooks/08_storage_and_keyvault_tools.ipynb) | Storage + Key Vault namespaces | [docs/06_available_tools_catalog.md](docs/06_available_tools_catalog.md) |
+| 9 | [09_resource_management_tools.ipynb](notebooks/09_resource_management_tools.ipynb) | Subscriptions, RBAC, compute, AKS | [docs/06_available_tools_catalog.md](docs/06_available_tools_catalog.md) |
+| 10 | [10_data_and_analytics_tools.ipynb](notebooks/10_data_and_analytics_tools.ipynb) | Cosmos DB, SQL, Kusto, Monitor | [docs/06_available_tools_catalog.md](docs/06_available_tools_catalog.md) |
+| 11 | [11_devops_and_deployment_tools.ipynb](notebooks/11_devops_and_deployment_tools.ipynb) | azd, Bicep, Terraform, deploy | [docs/06_available_tools_catalog.md](docs/06_available_tools_catalog.md) |
+| 12 | [12_server_modes_namespaces.ipynb](notebooks/12_server_modes_namespaces.ipynb) | Server modes & namespaces | [docs/07_server_modes_and_advanced_config.md](docs/07_server_modes_and_advanced_config.md) |
+| 13 | [13_error_handling_and_retries.ipynb](notebooks/13_error_handling_and_retries.ipynb) | Retries, timeouts, resiliency | [docs/07_server_modes_and_advanced_config.md](docs/07_server_modes_and_advanced_config.md) |
+| 14 | [14_security_elicitation_rbac.ipynb](notebooks/14_security_elicitation_rbac.ipynb) | Security, elicitation, RBAC | [docs/08_security_and_best_practices.md](docs/08_security_and_best_practices.md) |
+| 15 | [15_advanced_multi_agent_workflows.ipynb](notebooks/15_advanced_multi_agent_workflows.ipynb) | Advanced multi-tool/multi-server workflows | [docs/08_security_and_best_practices.md](docs/08_security_and_best_practices.md) |
+
+Start at `01` and work down — later notebooks assume you understand the
+client/tool-calling patterns introduced earlier.
