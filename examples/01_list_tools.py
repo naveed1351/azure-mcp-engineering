@@ -17,3 +17,6 @@ async def main() -> None:
             print(f"[{namespace}] ({len(infos)} tools)")
             for info in infos:
                 print(f"  - {info.name}: {info.description}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
