@@ -45,3 +45,15 @@ Supported languages/frameworks with first-party guidance: **Python** and
   (notebooks 06–07).
 - Using Azure operations inside Jupyter notebooks for exploratory workflows
   (the whole `notebooks/` folder).
+## Two ways to use it
+
+1. **Interactive, from an existing client** — the most common scenario. You
+   chat with GitHub Copilot agent mode (or another MCP client) and it decides
+   which Azure MCP tools to call on your behalf. No code required.
+2. **Programmatic, from your own host application** — the scenario this
+   repository teaches. You write a Python program that itself acts as an MCP
+   host: it starts the Azure MCP Server as a subprocess, lists its tools,
+   and drives tool calls either directly or through an LLM's function-calling
+   loop.
+
+Next: [03_installation_and_setup.md](03_installation_and_setup.md)
