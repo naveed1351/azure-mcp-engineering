@@ -52,3 +52,14 @@ Example prompts a client might translate into these parameters:
 - "Use subscription 'my-subscription-id' for all operations"
 - "Authenticate using tenant ID 'my-tenant-id'"
 - "Use 'credential' authentication for this session"
+## Troubleshooting
+
+- **`DefaultAzureCredential` fails locally** — run `az login` again; make
+  sure you selected the right tenant with `az login --tenant <tenant-id>`.
+- **Tool returns "not authorized"** — check RBAC role assignments with the
+  `role` (Azure RBAC) tool, covered in
+  [`notebooks/09_resource_management_tools.ipynb`](../notebooks/09_resource_management_tools.ipynb).
+- **Wrong subscription used** — run `az account set --subscription <id>` or
+  pass an explicit subscription parameter/prompt.
+
+Next: [05_tools_reference.md](05_tools_reference.md)
