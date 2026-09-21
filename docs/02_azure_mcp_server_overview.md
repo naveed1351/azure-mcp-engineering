@@ -29,3 +29,19 @@ them you need:
 Tool *availability* reflects your Azure subscription permissions — the
 server won't show you tools/data you don't have RBAC access to. Once you
 enable the tools in a host, they stay enabled across sessions.
+## Supported clients, languages, and frameworks
+
+Supported code editors/tools: Visual Studio Code, Visual Studio (2022
+17.14.30+, bundled with the Azure workload), Eclipse, Cursor, Windsurf,
+IntelliJ, Cline, and Google Antigravity.
+
+Supported languages/frameworks with first-party guidance: **Python** and
+**.NET**. This repository focuses entirely on the Python path:
+
+- Using Python MCP client libraries to connect directly to the Azure MCP
+  Server (notebooks 03–05).
+- Building automation scripts that manage Azure resources (`examples/`).
+- Integrating Azure MCP tool-calling into an agent loop with Azure OpenAI
+  (notebooks 06–07).
+- Using Azure operations inside Jupyter notebooks for exploratory workflows
+  (the whole `notebooks/` folder).
