@@ -19,3 +19,6 @@ async def main() -> None:
         )
         print("Learn-mode metadata for azmcp_storage_account_list:")
         print(result.content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
