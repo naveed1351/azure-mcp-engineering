@@ -57,3 +57,11 @@ def search_tools(tools: Iterable[Any], keyword: str) -> list[ToolInfo]:
         if keyword in haystack:
             matches.append(info)
     return matches
+
+def export_catalog_to_json(tools: Iterable[Any], path: str | Path) -> Path:
+    """Write the full tool catalog to a JSON file for offline reference /
+    diffing between Azure MCP Server versions."""
+    path = Path(path)
+    catalog = [asdict(ToolInfo.from_mcp_tool(tool)) for tool in tools]
+    path.write_text(json.dumps(catalog, indent=2), encoding="utf-8")
+    return path
