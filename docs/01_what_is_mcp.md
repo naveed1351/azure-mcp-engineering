@@ -36,3 +36,23 @@ MCP defines a client-server architecture with three components:
 |   +------------------+                                                                  |
 +---------------------------------------------------------------------------------------+
 ```
+## Lifecycle of a tool call
+
+1. The client connects to the server (over stdio, HTTP, or another
+   transport) and calls `initialize()` to negotiate protocol version and
+   capabilities.
+2. The client calls `list_tools()`. The server responds with each tool's
+   name, description, and JSON Schema for its input parameters.
+3. The host passes those tool definitions to the LLM alongside the user's
+   prompt (for example, using OpenAI's `tools=` parameter for function
+   calling).
+4. If the model decides a tool is needed, it returns a *tool call* (a tool
+   name plus JSON arguments) instead of, or alongside, plain text.
+5. The client calls `call_tool(name, arguments)` on the MCP server, which
+   performs the real work (e.g., an Azure Resource Manager call) and returns
+   a result.
+6. The result is appended back into the conversation, and the LLM produces
+   a final natural-language answer.
+
+This request/response loop is exactly what you'll implement by hand in
+[`notebooks/06_azure_openai_function_calling.ipynb`](../notebooks/06_azure_openai_function_calling.ipynb).
