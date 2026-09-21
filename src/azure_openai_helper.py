@@ -26,3 +26,17 @@ def get_azure_openai_client(settings: Settings | None = None) -> AzureOpenAI:
         api_version="2024-04-01-preview",
         azure_ad_token_provider=token_provider,
     )
+
+def chat_with_tools(
+    client: AzureOpenAI,
+    model: str,
+    messages: list[dict[str, Any]],
+    tools: list[dict[str, Any]],
+):
+    """Call the chat completions API with a tool/function schema attached.
+
+    This is a thin wrapper so notebooks can call one function instead of
+    repeating the same ``client.chat.completions.create(...)`` boilerplate
+    on every turn.
+    """
+    return client.chat.completions.create(model=model, messages=messages, tools=tools)
