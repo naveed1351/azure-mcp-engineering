@@ -22,3 +22,16 @@ For easy deployment and isolation you can run the Azure MCP server as a
 Docker container instead of via `npx`/`dotnet`/`pip`. See
 [Run Azure MCP Server in Docker](https://github.com/microsoft/mcp/blob/main/servers/Azure.Mcp.Server/README.md#docker)
 for the exact image and flags.
+## IDE quick links
+
+- [Visual Studio Code](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started/tools/visual-studio-code)
+- [Visual Studio](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started/tools/visual-studio) — bundled with the Azure workload in 17.14.30+, no extra extension needed.
+- [Cursor](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started/tools/cursor)
+- [Windsurf](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started/tools/windsurf)
+- [Cline](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started/tools/cline)
+- [IntelliJ](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started/tools/jet-brains)
+- [Eclipse](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started/tools/eclipse)
+
+This repo doesn't require any of these — it talks to the server directly
+from Python — but they're the fastest way to try the tools conversationally
+before writing code.
