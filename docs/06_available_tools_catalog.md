@@ -47,3 +47,22 @@ so you have an offline reference while working through the notebooks.
 | Azure Functions | `functionapp` | List Azure Functions. |
 | Azure Kubernetes Service | `aks` | List AKS clusters. |
 | Azure Service Fabric | `servicefabric` | Managed clusters, node details, restarts. |
+## Databases
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure Cosmos DB | `cosmos` | Accounts, databases, containers, documents. |
+| Azure Database for MySQL | `mysql` | Servers, databases, tables. |
+| Azure Database for PostgreSQL | `postgres` | Servers, databases, tables. |
+| Azure Redis | `redis` | Managed Redis and Cache for Redis. |
+| Azure SQL | `sql` | Servers, databases, firewall rules, elastic pools. |
+
+## Developer tools
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure App Configuration | `appconfig` | Centralized settings and feature flags. |
+| Azure Application Insights | `applicationinsights` | List Application Insights resources. |
+| Azure CLI | `extension` | Find CLI commands and install instructions. |
+| Azure Developer CLI (azd) | `extension` | azd install instructions, deployment usage, azd MCP tools. |
+| Azure Load Testing | `loadtesting` | Create, run, and view load tests. |
