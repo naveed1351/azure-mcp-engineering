@@ -12,3 +12,21 @@
 | **Read only** | Optional | If `true`, no write operations are allowed. Default: `false`. |
 | **Tool** | Optional | Expose specific tools by name (e.g. `azmcp_storage_account_get`); switches to `all` mode automatically. |
 | **Transport** | Optional | Transport mechanism. Default: `stdio`. |
+## Global tool parameters
+
+Beyond subscription/tenant/auth method (see
+[04_authentication.md](04_authentication.md)), every tool also accepts retry
+and diagnostics parameters:
+
+| Parameter | Description | Default |
+| --- | --- | --- |
+| **Maximum retries** | Retry attempts before giving up | 3 |
+| **Retry delay** | Initial delay (seconds) between retries | 2 |
+| **Retry delay maximum** | Cap on delay between retries | 10 |
+| **Retry mode** | `fixed` or `exponential` backoff | `exponential` |
+| **Retry network timeout** | Per-operation timeout (seconds) | 100 |
+| **Learn mode** | Discover commands/parameters without executing them | disabled |
+
+These map naturally onto conversational prompts, e.g. "Set maximum retries to
+5 with a 3-second delay" or "Use learn mode to discover available parameters
+for this tool".
