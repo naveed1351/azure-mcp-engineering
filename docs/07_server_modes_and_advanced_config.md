@@ -26,3 +26,14 @@ server_params = StdioServerParameters(
           "--namespace", "storage", "--namespace", "keyvault"],
 )
 ```
+## Read-only mode
+
+Setting `Read only=true` blocks every tool that would create, modify, or
+delete a resource, regardless of namespace. This is the single most
+important safety switch for any agent you don't fully trust yet — turn it on
+while you're still testing prompts, and only relax it once you understand
+exactly which destructive tools a workflow needs.
+
+```python
+args=["-y", "@azure/mcp@latest", "server", "start", "--read-only"]
+```
