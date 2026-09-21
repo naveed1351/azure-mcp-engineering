@@ -18,3 +18,6 @@ async def main() -> None:
         )
         print("Query results:")
         print(result.content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
