@@ -46,3 +46,10 @@ are metadata hints describing a tool's behavior:
 
 You'll inspect these programmatically in
 [`notebooks/14_security_elicitation_rbac.ipynb`](../notebooks/14_security_elicitation_rbac.ipynb).
+## Elicitation (user confirmation for sensitive data)
+
+Tools that touch secrets, connection strings, passwords, or certificate
+private keys require **elicitation**: the MCP client must prompt the user
+for explicit confirmation before the call proceeds. This is a security
+mechanism, not a bug — don't disable it (`Disable user confirmation`) outside
+fully trusted, non-interactive automation.
