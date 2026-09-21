@@ -45,3 +45,15 @@ pipelines where a human could never have intervened anyway.
 - **Disabling retries entirely** in production-like scenarios — transient
   Azure API throttling is normal; exponential backoff (the default) handles
   it gracefully.
+## Further resources
+
+- [Azure MCP Server tools overview](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/tools/)
+- [Azure Skills Plugin](https://github.com/microsoft/azure-skills) — packaged,
+  version-controlled workflows/guardrails built on top of the Azure MCP
+  Server and the Foundry MCP Server.
+- [Azure RBAC overview](https://learn.microsoft.com/en-us/azure/role-based-access-control/overview)
+
+This is the last conceptual doc in the series — continue with
+[`notebooks/14_security_elicitation_rbac.ipynb`](../notebooks/14_security_elicitation_rbac.ipynb)
+and [`notebooks/15_advanced_multi_agent_workflows.ipynb`](../notebooks/15_advanced_multi_agent_workflows.ipynb)
+to put all of it into practice.
