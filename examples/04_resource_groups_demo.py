@@ -17,3 +17,6 @@ async def main() -> None:
         groups = await client.call_tool("azmcp_group_list", {})
         print("\nResource groups in the default subscription:")
         print(groups.content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
