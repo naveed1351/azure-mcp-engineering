@@ -11,3 +11,17 @@ authentication modes:
   environment variables, Visual Studio Code, Visual Studio, Azure CLI, Azure
   PowerShell, Azure Developer CLI, and finally interactive browser
   authentication.
+## Signing in for local development
+
+Pick whichever tool you already use:
+
+| Tool | Command |
+| --- | --- |
+| VS Code | Command Palette (`Ctrl+Shift+P`) → **Azure: Sign In** |
+| Visual Studio | **File > Account Settings > Add an account** |
+| Azure CLI | `az login` |
+| Azure PowerShell | `Connect-AzAccount` |
+| Azure Developer CLI | `azd auth login` |
+
+After signing in, the Azure MCP Server can authenticate and run operations
+based on your permissions — there's no separate "MCP login" step.
