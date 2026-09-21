@@ -16,3 +16,5 @@ import logging
 # it should only attach a NullHandler so that notebooks/examples/CLIs can
 # opt in to logging via `logging.basicConfig(...)` themselves.
 logging.getLogger(__name__).addHandler(logging.NullHandler())
+
+__all__ = ["__version__"]
