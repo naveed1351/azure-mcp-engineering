@@ -12,3 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.agent_loop import _main
 import asyncio
+
+# All of the actual argument parsing / connection / loop logic lives in
+# src/agent_loop.py so it can be reused from notebooks too; this file is
+# intentionally just an entry point.
