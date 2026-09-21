@@ -31,3 +31,14 @@ class ToolInfo:
             description=tool.description or "",
             parameters=tool.inputSchema or {},
         )
+
+def group_tools_by_namespace(tools: Iterable[Any]) -> dict[str, list[ToolInfo]]:
+    """Group raw MCP tools into ``{namespace: [ToolInfo, ...]}``, sorted for
+    stable, readable notebook output."""
+    grouped: dict[str, list[ToolInfo]] = {}
+    for tool in tools:
+        info = ToolInfo.from_mcp_tool(tool)
+        grouped.setdefault(info.namespace, []).append(info)
+    for infos in grouped.values():
+        infos.sort(key=lambda t: t.name)
+    return dict(sorted(grouped.items()))
