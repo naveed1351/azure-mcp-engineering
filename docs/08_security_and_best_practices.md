@@ -10,3 +10,11 @@ can never do more than your account is already allowed to do, but it also
 means a poorly-scoped account (e.g. Owner on a whole subscription) makes an
 agent built on top of it just as risky as that role would be for you
 personally.
+## Elicitation, revisited
+
+Elicitation (see [05_tools_reference.md](05_tools_reference.md)) is your last
+line of defense against an LLM silently exfiltrating a Key Vault secret or
+connection string into a chat transcript or log file. Treat
+`Disable user confirmation=true` the same way you'd treat disabling a
+production approval gate: only acceptable in fully automated, fully trusted
+pipelines where a human could never have intervened anyway.
