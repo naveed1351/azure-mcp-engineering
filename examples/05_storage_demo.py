@@ -17,3 +17,6 @@ async def main() -> None:
             "azmcp_storage_blob_container_list / azmcp_storage_blob_list "
             "with an 'account' argument."
         )
+
+if __name__ == "__main__":
+    asyncio.run(main())
