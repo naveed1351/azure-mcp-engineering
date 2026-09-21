@@ -18,3 +18,6 @@ async def main() -> None:
         result = await client.call_tool("azmcp_subscription_list", {})
         print("Subscriptions available to your signed-in account:\n")
         print(result.content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
