@@ -53,3 +53,13 @@ private keys require **elicitation**: the MCP client must prompt the user
 for explicit confirmation before the call proceeds. This is a security
 mechanism, not a bug — don't disable it (`Disable user confirmation`) outside
 fully trusted, non-interactive automation.
+## How parameters flow from natural language
+
+You don't need to restate every parameter on every prompt. If the
+conversation context already establishes a subscription, resource group, or
+account name, the Azure MCP Server can reuse that context on subsequent tool
+calls in the same session — this is what makes multi-turn conversations
+feel natural (see
+[`notebooks/07_building_a_conversational_agent.ipynb`](../notebooks/07_building_a_conversational_agent.ipynb)).
+
+Next: [06_available_tools_catalog.md](06_available_tools_catalog.md)
