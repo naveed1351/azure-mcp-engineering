@@ -18,3 +18,14 @@ natural language, by exposing Azure operations as MCP tools.
   packages 26+ reusable Azure skills (`azure-prepare`, `azure-validate`,
   `azure-deploy`, `azure-diagnostics`, `azure-cost`, ...) that layer
   structured workflows and guardrails on top of the raw MCP tools.
+## Prerequisites
+
+Azure MCP Server tools are **disabled by default** in supported hosts. To use
+them you need:
+
+- A GitHub Copilot subscription (if using a Copilot-based host)
+- An Azure account with appropriate subscription permissions (RBAC)
+
+Tool *availability* reflects your Azure subscription permissions — the
+server won't show you tools/data you don't have RBAC access to. Once you
+enable the tools in a host, they stay enabled across sessions.
