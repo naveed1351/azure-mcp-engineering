@@ -22,3 +22,6 @@ async def main() -> None:
             "'vault' and 'secret' name -- expect an elicitation / "
             "confirmation prompt in interactive clients."
         )
+
+if __name__ == "__main__":
+    asyncio.run(main())
