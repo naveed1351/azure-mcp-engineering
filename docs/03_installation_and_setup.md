@@ -16,3 +16,9 @@ Package manager installation offers centralized dependency management, CI/CD
 integration, support for headless environments, version pinning, and project
 portability. See the [Azure MCP Server README](https://github.com/microsoft/mcp/blob/main/servers/Azure.Mcp.Server/README.md#package-manager)
 for full details.
+## Docker
+
+For easy deployment and isolation you can run the Azure MCP server as a
+Docker container instead of via `npx`/`dotnet`/`pip`. See
+[Run Azure MCP Server in Docker](https://github.com/microsoft/mcp/blob/main/servers/Azure.Mcp.Server/README.md#docker)
+for the exact image and flags.
