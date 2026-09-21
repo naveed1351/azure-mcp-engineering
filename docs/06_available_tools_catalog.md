@@ -91,3 +91,21 @@ so you have an offline reference while working through the notebooks.
 | Azure Event Grid | `eventgrid` | Topics and subscriptions. |
 | Azure Native ISV (Datadog) | `datadog` | Monitoring/observability integration. |
 | Azure Service Bus | `servicebus` | Queues, topics, peek at messages. |
+## IoT and hybrid/multicloud
+
+| Product/tool | Namespace | Description |
+| --- | --- | --- |
+| Azure Cosmos DB | `cosmos` | Accounts, databases, containers, documents. |
+| Azure Device Registry | `deviceregistry` | Namespaces for organizing IoT device assets. |
+| Azure Event Grid | `eventgrid` | Topics and subscriptions. |
+| Azure Functions | `functionapp` | List Azure Functions. |
+| Azure IoT Hub | `iothub` | List devices/hubs. |
+| Azure Database for PostgreSQL | `postgres` | Also usable in hybrid/multicloud scenarios. |
+| Azure SQL | `sql` | Also usable in hybrid/multicloud scenarios. |
+
+> This catalog is not exhaustive — the server adds namespaces over time. Use
+> `learn mode` (see [05_tools_reference.md](05_tools_reference.md)) or
+> [`notebooks/04_exploring_available_tools.ipynb`](../notebooks/04_exploring_available_tools.ipynb)
+> to list what your installed version actually exposes.
+
+Next: [07_server_modes_and_advanced_config.md](07_server_modes_and_advanced_config.md)
