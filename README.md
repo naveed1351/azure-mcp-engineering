@@ -99,3 +99,21 @@ notebooks and examples launch it on demand via `npx -y @azure/mcp@latest`.
 
 Start at `01` and work down — later notebooks assume you understand the
 client/tool-calling patterns introduced earlier.
+## Resources
+
+- [Azure MCP Server overview](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/overview)
+- [Azure MCP Server documentation home](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/)
+- [Get started with Azure MCP Server](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/get-started)
+- [Azure MCP Server tools reference](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/tools/)
+- [Azure MCP Server on GitHub](https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server)
+- [Model Context Protocol specification](https://modelcontextprotocol.io/)
+
+## Disclaimer
+
+This is a personal learning project. It reproduces and adapts examples from
+the official Microsoft Learn documentation for educational purposes. For
+production guidance always refer back to the official docs linked above.
+
+## License
+
+Licensed under the [MIT License](LICENSE).
