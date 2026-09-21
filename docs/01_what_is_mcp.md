@@ -56,3 +56,16 @@ MCP defines a client-server architecture with three components:
 
 This request/response loop is exactly what you'll implement by hand in
 [`notebooks/06_azure_openai_function_calling.ipynb`](../notebooks/06_azure_openai_function_calling.ipynb).
+## Why MCP for Azure?
+
+Without MCP, building an "Azure copilot" means writing bespoke code for every
+Azure SDK you want to expose to an LLM, plus your own auth, retry, and
+error-handling layer for each one. The Azure MCP Server does that work once,
+exposing a consistent set of tools (see
+[docs/06_available_tools_catalog.md](06_available_tools_catalog.md)) that any
+MCP client — GitHub Copilot agent mode, the OpenAI Agents SDK, Semantic
+Kernel, or your own Python script — can call the same way.
+
+Because the protocol is transport-agnostic and language-agnostic, the same
+server can be driven from VS Code's chat UI *and* from a headless Python
+automation script, which is exactly what this repository demonstrates.
