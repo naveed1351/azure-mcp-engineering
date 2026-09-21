@@ -42,3 +42,18 @@ def group_tools_by_namespace(tools: Iterable[Any]) -> dict[str, list[ToolInfo]]:
     for infos in grouped.values():
         infos.sort(key=lambda t: t.name)
     return dict(sorted(grouped.items()))
+
+def search_tools(tools: Iterable[Any], keyword: str) -> list[ToolInfo]:
+    """Case-insensitive search over tool names and descriptions.
+
+    Handy when a namespace (e.g. ``storage``) exposes dozens of tools and you
+    just want the ones mentioning, say, "blob" or "container".
+    """
+    keyword = keyword.lower()
+    matches = []
+    for tool in tools:
+        info = ToolInfo.from_mcp_tool(tool)
+        haystack = f"{info.name} {info.description}".lower()
+        if keyword in haystack:
+            matches.append(info)
+    return matches
