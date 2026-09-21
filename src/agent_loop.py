@@ -16,3 +16,15 @@ from .config import get_settings
 from .mcp_client import AzureMcpClient, build_server_params
 
 logger = logging.getLogger(__name__)
+
+class ConversationAgent:
+    """Holds one growing message history and drives the tool-calling loop
+    against a single, already-connected :class:`AzureMcpClient`."""
+
+    def __init__(self, mcp_client: AzureMcpClient, model: str | None = None):
+        self.mcp_client = mcp_client
+        settings = get_settings()
+        self.model = model or settings.azure_openai_model
+        self.openai_client = get_azure_openai_client(settings)
+        self.messages: list[dict] = []
+        self._tools_schema: list[dict] | None = None
