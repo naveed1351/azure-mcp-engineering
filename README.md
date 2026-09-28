@@ -22,6 +22,10 @@ Jupyter notebooks.
   natural-language Azure agent.
 - How to work with tools across Storage, Key Vault, Cosmos DB, SQL/MySQL/Postgres,
   Monitor/Kusto, App Service, AKS, DevOps/deployment, and identity/RBAC namespaces.
+- A runnable demo for nearly 50 additional Azure MCP Server namespaces (AI
+  Search, Speech, Event Grid/Hubs, Service Bus, IoT Hub, Redis, Container
+  Apps/Registry, Backup, Advisor, Pricing, and more) -- see
+  [docs/09_example_gallery.md](docs/09_example_gallery.md).
 - Server modes (`namespace`, `consolidated`, `all`, `single`), read-only mode,
   retries/timeouts, and "learn mode" tool discovery.
 - Security concepts: RBAC, elicitation (user confirmation for secrets), and tool
