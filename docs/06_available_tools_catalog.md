@@ -106,6 +106,8 @@ so you have an offline reference while working through the notebooks.
 > This catalog is not exhaustive — the server adds namespaces over time. Use
 > `learn mode` (see [05_tools_reference.md](05_tools_reference.md)) or
 > [`notebooks/04_exploring_available_tools.ipynb`](../notebooks/04_exploring_available_tools.ipynb)
-> to list what your installed version actually exposes.
+> to list what your installed version actually exposes. For a runnable
+> script against most of the namespaces above, see
+> [09_example_gallery.md](09_example_gallery.md).
 
 Next: [07_server_modes_and_advanced_config.md](07_server_modes_and_advanced_config.md)
