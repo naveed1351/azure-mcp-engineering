@@ -56,4 +56,6 @@ pipelines where a human could never have intervened anyway.
 This is the last conceptual doc in the series — continue with
 [`notebooks/14_security_elicitation_rbac.ipynb`](../notebooks/14_security_elicitation_rbac.ipynb)
 and [`notebooks/15_advanced_multi_agent_workflows.ipynb`](../notebooks/15_advanced_multi_agent_workflows.ipynb)
-to put all of it into practice.
+to put all of it into practice, or browse
+[09_example_gallery.md](09_example_gallery.md) for a runnable script against
+almost every namespace covered in this course.
