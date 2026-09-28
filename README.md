@@ -22,6 +22,10 @@ Jupyter notebooks.
   natural-language Azure agent.
 - How to work with tools across Storage, Key Vault, Cosmos DB, SQL/MySQL/Postgres,
   Monitor/Kusto, App Service, AKS, DevOps/deployment, and identity/RBAC namespaces.
+- A runnable demo for nearly 50 additional Azure MCP Server namespaces (AI
+  Search, Speech, Event Grid/Hubs, Service Bus, IoT Hub, Redis, Container
+  Apps/Registry, Backup, Advisor, Pricing, and more) -- see
+  [docs/09_example_gallery.md](docs/09_example_gallery.md).
 - Server modes (`namespace`, `consolidated`, `all`, `single`), read-only mode,
   retries/timeouts, and "learn mode" tool discovery.
 - Security concepts: RBAC, elicitation (user confirmation for secrets), and tool
@@ -42,7 +46,7 @@ azure-mcp-engineering/
 ├── docs/                Conceptual reference notes, mirroring Microsoft Learn
 ├── notebooks/           15 Jupyter notebooks, fundamentals -> advanced
 ├── src/                 Reusable Python helper modules imported by the notebooks/examples
-├── examples/            Small, focused standalone scripts (run with `python examples/xx_name.py`)
+├── examples/            54 small, focused standalone scripts (run with `python examples/xx_name.py`)
 ├── requirements.txt     Python dependencies for the whole course
 ├── .env.example         Template for the environment variables the code expects
 └── README.md            You are here
@@ -50,7 +54,10 @@ azure-mcp-engineering/
 
 Each notebook and example is self-contained but builds on the helpers in
 [`src/`](./src). Read `docs/` alongside the notebooks for the "why", and use
-the notebooks/examples for the "how".
+the notebooks/examples for the "how". The first 10 examples pair with the
+notebooks below; `examples/11` through `examples/54` are a standalone
+gallery covering nearly every remaining Azure MCP Server namespace -- see
+[docs/09_example_gallery.md](docs/09_example_gallery.md) for the full index.
 ## Quick start
 
 ```powershell
