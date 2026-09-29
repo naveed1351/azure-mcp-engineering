@@ -31,6 +31,10 @@ Jupyter notebooks.
 - Security concepts: RBAC, elicitation (user confirmation for secrets), and tool
   annotations (destructive / idempotent / read-only / secret / local-required).
 - Advanced patterns: multi-server MCP clients and composing custom workflows.
+- **Part 2:** Exposing your own MCP servers and LLM backends through Azure
+  API Management's AI gateway -- REST-API-backed and federated MCP servers,
+  Entra ID security, governance policies, and resiliency for both MCP tools
+  and Azure OpenAI traffic (notebooks 16-22).
 
 ### Prerequisites
 
@@ -44,7 +48,7 @@ Jupyter notebooks.
 ```text
 azure-mcp-engineering/
 ├── docs/                Conceptual reference notes, mirroring Microsoft Learn
-├── notebooks/           15 Jupyter notebooks, fundamentals -> advanced
+├── notebooks/           22 Jupyter notebooks: 01-15 fundamentals -> advanced, 16-22 APIM AI gateway/MCP
 ├── src/                 Reusable Python helper modules imported by the notebooks/examples
 ├── examples/            54 small, focused standalone scripts (run with `python examples/xx_name.py`)
 ├── requirements.txt     Python dependencies for the whole course
@@ -104,8 +108,23 @@ notebooks and examples launch it on demand via `npx -y @azure/mcp@latest`.
 | 14 | [14_security_elicitation_rbac.ipynb](notebooks/14_security_elicitation_rbac.ipynb) | Security, elicitation, RBAC | [docs/08_security_and_best_practices.md](docs/08_security_and_best_practices.md) |
 | 15 | [15_advanced_multi_agent_workflows.ipynb](notebooks/15_advanced_multi_agent_workflows.ipynb) | Advanced multi-tool/multi-server workflows | [docs/08_security_and_best_practices.md](docs/08_security_and_best_practices.md) |
 
+### Part 2 — Azure API Management as an AI gateway for MCP
+
+| # | Notebook | Topic | Related doc |
+| - | -------- | ----- | ------------ |
+| 16 | [16_apim_ai_gateway_fundamentals.ipynb](notebooks/16_apim_ai_gateway_fundamentals.ipynb) | AI gateway fundamentals & MCP architecture recap | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+| 17 | [17_exposing_rest_apis_as_mcp_servers.ipynb](notebooks/17_exposing_rest_apis_as_mcp_servers.ipynb) | Expose a managed REST API as an MCP server | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+| 18 | [18_securing_mcp_servers_with_entra_id.ipynb](notebooks/18_securing_mcp_servers_with_entra_id.ipynb) | Inbound/outbound security with Entra ID & credential manager | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+| 19 | [19_mcp_server_policies_and_governance.ipynb](notebooks/19_mcp_server_policies_and_governance.ipynb) | Rate limits, caching, tracing policies for MCP tools | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+| 20 | [20_federating_existing_mcp_servers_and_discovery.ipynb](notebooks/20_federating_existing_mcp_servers_and_discovery.ipynb) | Federate existing MCP servers; discovery via Azure API Center | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+| 21 | [21_ai_gateway_llm_backends_and_resiliency.ipynb](notebooks/21_ai_gateway_llm_backends_and_resiliency.ipynb) | Load balancing, circuit breakers, token limits, semantic caching | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+| 22 | [22_end_to_end_agent_over_apim_gateway.ipynb](notebooks/22_end_to_end_agent_over_apim_gateway.ipynb) | Capstone: one agent, both chat + tools through the gateway | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+
 Start at `01` and work down — later notebooks assume you understand the
-client/tool-calling patterns introduced earlier.
+client/tool-calling patterns introduced earlier. Notebooks 16-22 assume
+you've finished Part 1 and need an Azure API Management instance (any tier
+from Developer through Premium v2 supports MCP servers) in addition to the
+Azure OpenAI resource from Part 1.
 ## Resources
 
 - [Azure MCP Server overview](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/overview)
@@ -114,6 +133,9 @@ client/tool-calling patterns introduced earlier.
 - [Azure MCP Server tools reference](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/tools/)
 - [Azure MCP Server on GitHub](https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server)
 - [Model Context Protocol specification](https://modelcontextprotocol.io/)
+- [Overview of MCP servers in Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/mcp-server-overview)
+- [AI gateway capabilities in Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities)
+- [Azure-Samples/AI-Gateway hands-on labs](https://github.com/Azure-Samples/AI-Gateway)
 
 ## Disclaimer
 

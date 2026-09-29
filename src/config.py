@@ -19,11 +19,21 @@ class Settings:
     azure_openai_model: str
     azure_subscription_id: str | None
     azure_tenant_id: str | None
+    apim_mcp_server_url: str | None
+    apim_subscription_key: str | None
+    apim_mcp_scope: str | None
+    apim_gateway_endpoint: str | None
 
     @property
     def has_azure_openai(self) -> bool:
         """True if enough configuration is present to build an Azure OpenAI client."""
         return bool(self.azure_openai_endpoint)
+
+    @property
+    def has_apim_mcp(self) -> bool:
+        """True if an Azure API Management-hosted MCP server URL is configured
+        (see notebooks 16-22 and ``docs/10_apim_ai_gateway_and_mcp.md``)."""
+        return bool(self.apim_mcp_server_url)
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
@@ -38,7 +48,28 @@ def get_settings() -> Settings:
         azure_openai_model=os.getenv("AZURE_OPENAI_MODEL", "gpt-4o"),
         azure_subscription_id=os.getenv("AZURE_SUBSCRIPTION_ID"),
         azure_tenant_id=os.getenv("AZURE_TENANT_ID"),
+        apim_mcp_server_url=os.getenv("APIM_MCP_SERVER_URL"),
+        apim_subscription_key=os.getenv("APIM_SUBSCRIPTION_KEY"),
+        apim_mcp_scope=os.getenv("APIM_MCP_SCOPE"),
+        apim_gateway_endpoint=os.getenv("APIM_GATEWAY_ENDPOINT"),
     )
+
+def require_apim_mcp(settings: Settings | None = None) -> Settings:
+    """Raise a friendly error if no Azure API Management MCP server is configured.
+
+    Notebooks 16-22 that call a *remote* MCP server hosted behind Azure API
+    Management should call this at the top of their setup cell instead of
+    failing with an opaque connection error.
+    """
+    settings = settings or get_settings()
+    if not settings.has_apim_mcp:
+        raise RuntimeError(
+            "APIM_MCP_SERVER_URL is not set. Copy .env.example to .env, expose "
+            "an MCP server in Azure API Management (see "
+            "docs/10_apim_ai_gateway_and_mcp.md), and fill in its endpoint "
+            "before running this notebook."
+        )
+    return settings
 
 def require_azure_openai(settings: Settings | None = None) -> Settings:
     """Raise a friendly error if Azure OpenAI configuration is missing.

@@ -22,3 +22,21 @@ number.
 - All new scripts default to `read_only=True` and call only non-destructive
   `get`/`list` tools, so they're safe to run repeatedly against a real
   Azure subscription.
+
+## Part 2: Azure API Management AI gateway and MCP
+
+- Added 7 new notebooks (`notebooks/16_*` through `notebooks/22_*`) covering
+  Azure API Management's AI gateway: exposing REST APIs and existing
+  servers as MCP servers, securing them with Microsoft Entra ID and
+  credential manager, governance policies (rate limiting, caching,
+  tracing), federation and discovery via Azure API Center, and resiliency/
+  token-governance policies for LLM backends, ending in a capstone agent
+  that calls both a chat model and MCP tools through the gateway.
+- Added `src/apim_mcp_client.py`, a Streamable HTTP MCP client helper for
+  connecting to Azure API Management-hosted MCP servers, plus matching
+  `APIM_*` settings in `src/config.py` and `.env.example`.
+- Pinned `mcp<2.0.0` in `requirements.txt`: the MCP Python SDK's v2 rewrite
+  changes the Streamable HTTP client API these notebooks depend on.
+- Added [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md),
+  the conceptual companion to notebooks 16-22, and linked it from the
+  README's learning path table.

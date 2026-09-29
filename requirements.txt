@@ -1,5 +1,8 @@
 # Core MCP + Azure client libraries used throughout the notebooks/examples
-mcp>=1.2.0
+# Pinned below 2.0 because the MCP Python SDK v2 rewrite (mcp>=2.0) renames
+# and reshapes the Streamable HTTP client API this course's remote-MCP
+# helpers (src/apim_mcp_client.py, notebooks 16-22) depend on.
+mcp>=1.2.0,<2.0.0
 azure-identity>=1.19.0
 openai>=1.50.0
 python-dotenv>=1.0.1
