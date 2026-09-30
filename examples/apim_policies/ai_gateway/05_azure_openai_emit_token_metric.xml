@@ -1,0 +1,28 @@
+<!--
+Recipe: Emit per-consumer token metrics, Azure OpenAI-specific (AI Gateway)
+
+Scenario:   Same as llm-emit-token-metric, using the Azure-OpenAI-specific
+            policy name.
+Use when:   You're standardizing purely on Azure OpenAI and prefer the
+            Azure-OpenAI-named policy for clarity in policy XML.
+Requires:   AI Gateway-capable API Management tier; Application Insights
+            configured; an Azure OpenAI API imported into API Management.
+-->
+<policies>
+  <inbound>
+    <base />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <azure-openai-emit-token-metric namespace="openai">
+      <dimension name="Subscription ID" value="@(context.Subscription.Id)" />
+      <dimension name="Client IP" value="@(context.Request.IpAddress)" />
+    </azure-openai-emit-token-metric>
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
