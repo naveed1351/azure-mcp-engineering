@@ -119,6 +119,7 @@ notebooks and examples launch it on demand via `npx -y @azure/mcp@latest`.
 | 20 | [20_federating_existing_mcp_servers_and_discovery.ipynb](notebooks/20_federating_existing_mcp_servers_and_discovery.ipynb) | Federate existing MCP servers; discovery via Azure API Center | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
 | 21 | [21_ai_gateway_llm_backends_and_resiliency.ipynb](notebooks/21_ai_gateway_llm_backends_and_resiliency.ipynb) | Load balancing, circuit breakers, token limits, semantic caching | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
 | 22 | [22_end_to_end_agent_over_apim_gateway.ipynb](notebooks/22_end_to_end_agent_over_apim_gateway.ipynb) | Capstone: one agent, both chat + tools through the gateway | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+| 23 | [23_choosing_apim_vs_ai_gateway.ipynb](notebooks/23_choosing_apim_vs_ai_gateway.ipynb) | Decision guide: plain API Management vs. AI Gateway policies | [docs/11_apim_vs_ai_gateway_decision_guide.md](docs/11_apim_vs_ai_gateway_decision_guide.md) |
 
 Start at `01` and work down — later notebooks assume you understand the
 client/tool-calling patterns introduced earlier. Notebooks 16-22 assume
