@@ -34,7 +34,10 @@ Jupyter notebooks.
 - **Part 2:** Exposing your own MCP servers and LLM backends through Azure
   API Management's AI gateway -- REST-API-backed and federated MCP servers,
   Entra ID security, governance policies, and resiliency for both MCP tools
-  and Azure OpenAI traffic (notebooks 16-22).
+  and Azure OpenAI traffic (notebooks 16-22), plus a decision guide for
+  when to reach for AI Gateway-specific policies versus plain API
+  Management policies, with 30 ready-to-adapt recipes (notebook 23,
+  `examples/apim_policies/`).
 
 ### Prerequisites
 
@@ -48,9 +51,9 @@ Jupyter notebooks.
 ```text
 azure-mcp-engineering/
 ├── docs/                Conceptual reference notes, mirroring Microsoft Learn
-├── notebooks/           22 Jupyter notebooks: 01-15 fundamentals -> advanced, 16-22 APIM AI gateway/MCP
+├── notebooks/           23 Jupyter notebooks: 01-15 fundamentals -> advanced, 16-23 APIM AI gateway/MCP
 ├── src/                 Reusable Python helper modules imported by the notebooks/examples
-├── examples/            54 small, focused standalone scripts (run with `python examples/xx_name.py`)
+├── examples/            54 standalone scripts, plus examples/apim_policies/ (30 APIM policy recipes)
 ├── requirements.txt     Python dependencies for the whole course
 ├── .env.example         Template for the environment variables the code expects
 └── README.md            You are here
@@ -136,6 +139,7 @@ Azure OpenAI resource from Part 1.
 - [Model Context Protocol specification](https://modelcontextprotocol.io/)
 - [Overview of MCP servers in Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/mcp-server-overview)
 - [AI gateway capabilities in Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities)
+- [Azure API Management policy reference — AI gateway category](https://learn.microsoft.com/en-us/azure/api-management/api-management-policies#ai-gateway)
 - [Azure-Samples/AI-Gateway hands-on labs](https://github.com/Azure-Samples/AI-Gateway)
 
 ## Disclaimer
