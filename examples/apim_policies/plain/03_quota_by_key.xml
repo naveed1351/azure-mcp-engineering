@@ -1,0 +1,30 @@
+<!--
+Recipe: Set a longer-window usage quota by key (plain API Management)
+
+Scenario:   Enforce a daily/monthly call budget per client, in addition to
+            (or instead of) a short-window rate limit.
+Use when:   You want "N calls per day" governance regardless of whether the
+            backend is an LLM or not.
+Requires:   Any API Management tier.
+Decision:   Pair with 01_rate_limit_by_key.xml for both a short-window rate
+            limit and a longer-window quota — this combination applies to
+            any REST API, AI or not.
+-->
+<policies>
+  <inbound>
+    <base />
+    <quota-by-key
+        calls="10000"
+        renewal-period="86400"
+        counter-key="@(context.Subscription?.Id ?? context.Request.IpAddress)" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
