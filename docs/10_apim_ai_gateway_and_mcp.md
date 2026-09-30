@@ -87,6 +87,9 @@ rest of the course (`src/config.py`), plus a new remote-transport client:
 - [Inventory and discover MCP servers in Azure API Center](https://learn.microsoft.com/en-us/azure/api-center/register-discover-mcp-server)
 - [Azure-Samples/AI-Gateway](https://github.com/Azure-Samples/AI-Gateway) — hands-on labs for everything above
 
-This is the last conceptual doc in the series. From here, work through
-notebooks 16-22 in order, or jump to whichever topic matches what you're
-building.
+This is not the last conceptual doc in the series — once you've decided
+*which* AI Gateway policies apply to your API, continue to
+[11_apim_vs_ai_gateway_decision_guide.md](11_apim_vs_ai_gateway_decision_guide.md)
+for a decision framework and 30 ready-to-adapt policy recipes. Otherwise,
+work through notebooks 16-22 in order, or jump to whichever topic matches
+what you're building.
