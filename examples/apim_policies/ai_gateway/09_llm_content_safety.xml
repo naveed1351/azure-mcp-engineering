@@ -1,0 +1,39 @@
+<!--
+Recipe: Screen LLM prompts/completions for harmful content (AI Gateway)
+
+Scenario:   Block requests or responses containing hate speech, self-harm,
+            sexual, or violent content categories before they reach (or
+            after they leave) the LLM backend.
+Use when:   You're exposing a chat/completion API (or, per the policy
+            reference, an MCP tool or A2A agent API) to end users and need
+            a content-safety gate.
+Requires:   AI Gateway-capable API Management tier; an Azure AI Content
+            Safety resource; a backend registered for it with API
+            Management's managed identity granted the Cognitive Services
+            User role on that resource.
+Decision:   Pair with token-limit/semantic-cache policies for a complete
+            governance pipeline — see
+            10_content_safety_plus_token_limit_pipeline.xml.
+-->
+<policies>
+  <inbound>
+    <base />
+    <llm-content-safety backend-id="content-safety-backend" shield-prompt="true">
+      <categories output-type="EightSeverityLevels">
+        <category name="Hate" threshold="4" />
+        <category name="SelfHarm" threshold="4" />
+        <category name="Sexual" threshold="4" />
+        <category name="Violence" threshold="4" />
+      </categories>
+    </llm-content-safety>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
