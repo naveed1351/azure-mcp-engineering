@@ -40,3 +40,22 @@ number.
 - Added [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md),
   the conceptual companion to notebooks 16-22, and linked it from the
   README's learning path table.
+
+## APIM vs AI Gateway decision guide
+
+- Added notebook `23_choosing_apim_vs_ai_gateway.ipynb`: a decision table,
+  a five-question decision tree, a runnable `recommend_policies(...)`
+  helper, and two worked examples for deciding when a scenario needs
+  AI Gateway-specific policies versus plain API Management policies.
+- Added `examples/apim_policies/`, 30 ready-to-adapt policy/backend
+  recipes split into `plain/` (13 recipes: rate limiting, quotas,
+  concurrency, caching, IP filtering, JWT/Entra ID/certificate auth,
+  managed-identity backend auth, retries, tracing) and `ai_gateway/`
+  (17 recipes: `llm-token-limit`, `llm-emit-token-metric`,
+  `llm-semantic-cache-lookup`/`-store` and their `azure-openai-*`
+  equivalents, `llm-content-safety`, backend load-balancing/circuit-breaker
+  Bicep snippets, and combined MCP + LLM governance pipelines), plus a
+  `validate_policies.py` XML well-formedness checker and a README index.
+- Added [docs/11_apim_vs_ai_gateway_decision_guide.md](docs/11_apim_vs_ai_gateway_decision_guide.md),
+  the conceptual companion to notebook 23, cross-linked from the README,
+  docs/06, docs/09, and docs/10.

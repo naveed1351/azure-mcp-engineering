@@ -1,0 +1,31 @@
+<!--
+Recipe: Retry a transient backend failure (plain API Management)
+
+Scenario:   Automatically retry the enclosed backend call a few times before
+            giving up, for backends that occasionally fail transiently.
+Use when:   The backend is flaky but usually recovers within a second or
+            two — true of many REST APIs and, notably, LLM backends too.
+Requires:   Any API Management tier.
+Decision:   For LLM backends specifically, prefer configuring backend pools
+            with a circuit breaker (see
+            ai_gateway/15_backend_circuit_breaker_llm.bicep) over a blind
+            retry loop — retries against an already-overloaded model
+            deployment make the problem worse, not better.
+-->
+<policies>
+  <inbound>
+    <base />
+  </inbound>
+  <backend>
+    <retry condition="@(context.Response.StatusCode == 429 || context.Response.StatusCode >= 500)"
+           count="3" interval="1" max-interval="10" delta="2" first-fast-retry="false">
+      <forward-request />
+    </retry>
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

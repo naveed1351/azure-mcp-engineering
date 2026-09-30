@@ -1,0 +1,29 @@
+<!--
+Recipe: Token-aware rate limiting, Azure OpenAI-specific (AI Gateway)
+
+Scenario:   Same idea as llm-token-limit, using the Azure-OpenAI-specific
+            policy that predates the multi-provider llm-* family.
+Use when:   You're standardizing purely on Azure OpenAI deployments and
+            prefer the Azure-OpenAI-named policy for clarity in policy XML.
+Requires:   AI Gateway-capable API Management tier; an Azure OpenAI API
+            imported into API Management.
+-->
+<policies>
+  <inbound>
+    <base />
+    <azure-openai-token-limit
+        counter-key="@(context.Subscription.Id)"
+        tokens-per-minute="10000"
+        estimate-prompt-tokens="true"
+        remaining-tokens-variable-name="remainingTokens" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

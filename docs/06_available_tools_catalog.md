@@ -109,5 +109,11 @@ so you have an offline reference while working through the notebooks.
 > to list what your installed version actually exposes. For a runnable
 > script against most of the namespaces above, see
 > [09_example_gallery.md](09_example_gallery.md).
+>
+> This catalog is about tools the *Azure MCP Server* exposes to a client.
+> If you're instead exposing *your own* APIs or MCP servers to clients
+> through Azure API Management, see
+> [10_apim_ai_gateway_and_mcp.md](10_apim_ai_gateway_and_mcp.md) and
+> [11_apim_vs_ai_gateway_decision_guide.md](11_apim_vs_ai_gateway_decision_guide.md).
 
 Next: [07_server_modes_and_advanced_config.md](07_server_modes_and_advanced_config.md)

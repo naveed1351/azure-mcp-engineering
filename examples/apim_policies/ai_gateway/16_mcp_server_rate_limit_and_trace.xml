@@ -1,0 +1,38 @@
+<!--
+Recipe: Governance for an MCP server's tools (AI Gateway / MCP)
+
+Scenario:   Rate-limit and trace calls to an MCP server's tools — the same
+            "AI Gateway" umbrella that governs LLM chat traffic also covers
+            MCP tool calls (notebook 19 goes deeper on this).
+Use when:   You've exposed a REST API or existing server as an MCP server
+            (notebooks 17/20) and want per-caller governance on its tools.
+Requires:   AI Gateway-capable API Management tier; an MCP server
+            (API of type `mcp`) created in the instance.
+Decision:   Notice this uses the *plain* rate-limit-by-key and trace
+            policies — MCP tool governance mostly reuses ordinary APIM
+            policies. What's AI-Gateway-specific is the *target* (an MCP
+            server resource), not the policy vocabulary itself.
+-->
+<policies>
+  <inbound>
+    <base />
+    <rate-limit-by-key
+        calls="5"
+        renewal-period="30"
+        counter-key="@(context.Request.IpAddress)"
+        remaining-calls-variable-name="remainingCallsPerIP" />
+    <trace source="My MCP" severity="information">
+      <message>MCP tool call</message>
+      <metadata name="agent-id" value="@(context.Request.Headers.GetValueOrDefault('agent-id', 'n/a'))" />
+    </trace>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

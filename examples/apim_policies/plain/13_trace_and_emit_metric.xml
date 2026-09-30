@@ -1,0 +1,34 @@
+<!--
+Recipe: Custom tracing and generic metrics (plain API Management)
+
+Scenario:   Add a custom trace entry and a custom Application Insights
+            metric to any API — no token/LLM awareness.
+Use when:   You want basic observability (call counts, custom dimensions)
+            for a regular REST API.
+Requires:   Any API Management tier; Application Insights configured on the
+            instance.
+Decision:   Compare with ai_gateway/04_llm_emit_token_metric.xml, which
+            emits *token* counts specifically — use that only when the
+            backend is an LLM and tokens are the unit you care about.
+-->
+<policies>
+  <inbound>
+    <base />
+    <trace source="Plain APIM demo" severity="information">
+      <message>Request received</message>
+      <metadata name="operation" value="@(context.Operation.Name)" />
+    </trace>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <emit-metric name="RequestsProcessed" value="1" namespace="apim-demo">
+      <dimension name="API" value="@(context.Api.Name)" />
+    </emit-metric>
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

@@ -1,0 +1,41 @@
+<!--
+Recipe: Semantic (meaning-based) response caching for any LLM backend
+(AI Gateway)
+
+Scenario:   Reuse a cached response for a prompt that is *semantically*
+            similar to a previous one, not byte-identical.
+Use when:   Users phrase the same underlying question many different ways,
+            and near-duplicate LLM calls are expensive to repeat.
+Requires:   AI Gateway-capable API Management tier; an embeddings-capable
+            backend registered separately (see
+            08_semantic_cache_embeddings_backend.bicep); an external cache
+            (Azure Cache for Redis Enterprise or similar) configured for
+            the instance.
+Decision:   Only reach for this over plain/06_cache_lookup_and_store.xml
+            when requests are natural-language prompts. Semantic caching
+            can return incorrect/outdated matches — evaluate carefully
+            for sensitive workloads and consider pairing with
+            09_llm_content_safety.xml.
+-->
+<policies>
+  <inbound>
+    <base />
+    <llm-semantic-cache-lookup
+        score-threshold="0.05"
+        embeddings-backend-id="embeddings-backend"
+        embeddings-backend-auth="system-assigned"
+        ignore-system-messages="true">
+      <vary-by>@(context.Subscription.Id)</vary-by>
+    </llm-semantic-cache-lookup>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <llm-semantic-cache-store duration="60" />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

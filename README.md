@@ -34,7 +34,10 @@ Jupyter notebooks.
 - **Part 2:** Exposing your own MCP servers and LLM backends through Azure
   API Management's AI gateway -- REST-API-backed and federated MCP servers,
   Entra ID security, governance policies, and resiliency for both MCP tools
-  and Azure OpenAI traffic (notebooks 16-22).
+  and Azure OpenAI traffic (notebooks 16-22), plus a decision guide for
+  when to reach for AI Gateway-specific policies versus plain API
+  Management policies, with 30 ready-to-adapt recipes (notebook 23,
+  `examples/apim_policies/`).
 
 ### Prerequisites
 
@@ -43,14 +46,15 @@ Jupyter notebooks.
 - [Node.js LTS](https://nodejs.org/) (used to launch the Azure MCP Server via `npx @azure/mcp@latest`)
 - The [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for `az login`
 - An Azure OpenAI resource (only needed for the function-calling notebooks)
+- An [Azure API Management instance](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance) on a tier that supports MCP servers (Developer through Premium v2) (only needed for notebooks 16-23 / Part 2)
 ## Repository structure
 
 ```text
 azure-mcp-engineering/
 ├── docs/                Conceptual reference notes, mirroring Microsoft Learn
-├── notebooks/           22 Jupyter notebooks: 01-15 fundamentals -> advanced, 16-22 APIM AI gateway/MCP
+├── notebooks/           23 Jupyter notebooks: 01-15 fundamentals -> advanced, 16-23 APIM AI gateway/MCP
 ├── src/                 Reusable Python helper modules imported by the notebooks/examples
-├── examples/            54 small, focused standalone scripts (run with `python examples/xx_name.py`)
+├── examples/            54 standalone scripts, plus examples/apim_policies/ (30 APIM policy recipes)
 ├── requirements.txt     Python dependencies for the whole course
 ├── .env.example         Template for the environment variables the code expects
 └── README.md            You are here
@@ -119,6 +123,7 @@ notebooks and examples launch it on demand via `npx -y @azure/mcp@latest`.
 | 20 | [20_federating_existing_mcp_servers_and_discovery.ipynb](notebooks/20_federating_existing_mcp_servers_and_discovery.ipynb) | Federate existing MCP servers; discovery via Azure API Center | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
 | 21 | [21_ai_gateway_llm_backends_and_resiliency.ipynb](notebooks/21_ai_gateway_llm_backends_and_resiliency.ipynb) | Load balancing, circuit breakers, token limits, semantic caching | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
 | 22 | [22_end_to_end_agent_over_apim_gateway.ipynb](notebooks/22_end_to_end_agent_over_apim_gateway.ipynb) | Capstone: one agent, both chat + tools through the gateway | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
+| 23 | [23_choosing_apim_vs_ai_gateway.ipynb](notebooks/23_choosing_apim_vs_ai_gateway.ipynb) | Decision guide: plain API Management vs. AI Gateway policies | [docs/11_apim_vs_ai_gateway_decision_guide.md](docs/11_apim_vs_ai_gateway_decision_guide.md) |
 
 Start at `01` and work down — later notebooks assume you understand the
 client/tool-calling patterns introduced earlier. Notebooks 16-22 assume
@@ -135,6 +140,7 @@ Azure OpenAI resource from Part 1.
 - [Model Context Protocol specification](https://modelcontextprotocol.io/)
 - [Overview of MCP servers in Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/mcp-server-overview)
 - [AI gateway capabilities in Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities)
+- [Azure API Management policy reference — AI gateway category](https://learn.microsoft.com/en-us/azure/api-management/api-management-policies#ai-gateway)
 - [Azure-Samples/AI-Gateway hands-on labs](https://github.com/Azure-Samples/AI-Gateway)
 
 ## Disclaimer

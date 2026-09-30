@@ -1,0 +1,28 @@
+<!--
+Recipe: Semantic response caching, Azure OpenAI-specific (AI Gateway)
+
+Scenario:   Same as llm-semantic-cache-lookup/store, using the
+            Azure-OpenAI-specific policy names.
+Use when:   You're standardizing purely on Azure OpenAI and prefer the
+            Azure-OpenAI-named policies for clarity in policy XML.
+Requires:   Same prerequisites as 06_llm_semantic_cache_lookup_and_store.xml.
+-->
+<policies>
+  <inbound>
+    <base />
+    <azure-openai-semantic-cache-lookup
+        score-threshold="0.05"
+        embeddings-backend-id="embeddings-backend"
+        embeddings-backend-auth="system-assigned" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <azure-openai-semantic-cache-store duration="60" />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

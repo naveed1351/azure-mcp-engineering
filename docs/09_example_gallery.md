@@ -127,6 +127,15 @@ vault, endpoint, etc.) say so in their module docstring and use obvious
   `get`/`list` tools, so they're safe to run repeatedly against a real
   subscription.
 
+## A different kind of example: APIM policy recipes
+
+`examples/apim_policies/` is a sibling gallery, not a namespace-demo
+extension of the table above: 30 Azure API Management policy/backend
+snippets (not Python scripts) for deciding between plain API Management
+governance and AI Gateway-specific policies. See
+[examples/apim_policies/README.md](../examples/apim_policies/README.md)
+and [11_apim_vs_ai_gateway_decision_guide.md](11_apim_vs_ai_gateway_decision_guide.md).
+
 Next: there is no `10_` sequel to this page -- it's a living index. As the
 Azure MCP Server adds namespaces, add a matching `examples/NN_<name>_demo.py`
 script and a row here.

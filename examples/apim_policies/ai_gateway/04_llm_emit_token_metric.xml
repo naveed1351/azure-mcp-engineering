@@ -1,0 +1,29 @@
+<!--
+Recipe: Emit per-consumer token metrics for any LLM backend (AI Gateway)
+
+Scenario:   Send prompt/completion/total token counts to Application
+            Insights, dimensioned by subscription and client IP.
+Use when:   You need usage/cost analytics broken down by consumer for any
+            supported LLM API, not only Azure OpenAI.
+Requires:   AI Gateway-capable API Management tier; Application Insights
+            configured. Custom-metric dimension limits apply (max 5
+            dimensions per policy) — see the policy reference.
+-->
+<policies>
+  <inbound>
+    <base />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <llm-emit-token-metric namespace="llm-usage">
+      <dimension name="Subscription ID" value="@(context.Subscription.Id)" />
+      <dimension name="Client IP" value="@(context.Request.IpAddress)" />
+    </llm-emit-token-metric>
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

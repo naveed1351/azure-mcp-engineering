@@ -1,0 +1,29 @@
+<!--
+Recipe: Token budget per product/tier instead of per subscription (AI Gateway)
+
+Scenario:   Give every subscription under a "Free" product a small shared
+            token budget, distinct from a "Pro" product's larger budget.
+Use when:   Token governance should follow your product/plan structure
+            rather than individual subscriptions.
+Requires:   AI Gateway-capable API Management tier; APIs organized into
+            products.
+-->
+<policies>
+  <inbound>
+    <base />
+    <llm-token-limit
+        counter-key="@(context.Product?.Id ?? 'unassigned')"
+        tokens-per-minute="2000"
+        estimate-prompt-tokens="true"
+        retry-after-header-name="Retry-After" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

@@ -1,0 +1,38 @@
+<!--
+Recipe: Validate a generic JWT (plain API Management)
+
+Scenario:   Require a bearer JWT issued by any OpenID Connect-compatible
+            identity provider (not necessarily Microsoft Entra ID).
+Use when:   Your identity provider isn't Entra ID, or you need finer control
+            over claim validation than validate-azure-ad-token offers.
+Requires:   Any API Management tier.
+Decision:   For Entra ID specifically, prefer validate-azure-ad-token (see
+            09_validate_azure_ad_token.xml) — it's purpose-built and
+            simpler to configure.
+-->
+<policies>
+  <inbound>
+    <base />
+    <validate-jwt header-name="Authorization" failed-validation-httpcode="401"
+        failed-validation-error-message="Unauthorized. Access token is missing or invalid.">
+      <openid-config url="https://login.microsoftonline.com/{tenant-id}/v2.0/.well-known/openid-configuration" />
+      <audiences>
+        <audience>{expected-audience}</audience>
+      </audiences>
+      <required-claims>
+        <claim name="roles" match="any">
+          <value>Tool.Invoke</value>
+        </claim>
+      </required-claims>
+    </validate-jwt>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

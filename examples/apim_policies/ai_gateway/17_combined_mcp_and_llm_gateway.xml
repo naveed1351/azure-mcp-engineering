@@ -1,0 +1,29 @@
+<!--
+Recipe: One instance, two AI Gateway surfaces (AI Gateway)
+
+Scenario:   Illustrates that an MCP server API and an LLM-backed API in the
+            SAME API Management instance each carry their own policy
+            document, but share the instance's backends, credential
+            manager connections, Application Insights resource, and
+            products/subscriptions.
+Use when:   You're designing the full topology from notebook 22's capstone
+            (one agent, one gateway, both chat completions and tool
+            calls).
+Requires:   Everything in this folder, applied to the two respective APIs.
+
+    MCP server API policy               LLM (Azure OpenAI) API policy
+    ————————————            ——————————————-
+    rate-limit-by-key (tools)           llm-token-limit (tokens)
+    trace                               llm-emit-token-metric
+    validate-azure-ad-token             validate-azure-ad-token
+    (shared Entra ID app registration & credential manager connections)
+-->
+<policies>
+  <!--
+  This file is illustrative, not a single deployable policy document —
+  see 16_mcp_server_rate_limit_and_trace.xml for the MCP server's policy
+  and 10_content_safety_plus_token_limit_pipeline.xml for the LLM API's
+  policy. Apply each to its own API within the same API Management
+  instance.
+  -->
+</policies>

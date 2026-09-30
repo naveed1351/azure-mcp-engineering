@@ -1,0 +1,29 @@
+<!--
+Recipe: Exact-match response caching (plain API Management)
+
+Scenario:   Cache a response and reuse it for byte-identical subsequent
+            requests — classic HTTP caching, no similarity/embeddings.
+Use when:   A GET-style operation returns the same result for the same
+            request, and repeating it is safe and cheap to cache exactly.
+Requires:   Any API Management tier.
+Decision:   Compare with 06_llm_semantic_cache_lookup_and_store.xml in the
+            ai_gateway/ folder: that variant caches by *meaning*, not exact
+            text — only reach for it when requests are natural-language
+            prompts that vary in wording but mean the same thing.
+-->
+<policies>
+  <inbound>
+    <base />
+    <cache-lookup vary-by-developer="false" vary-by-developer-groups="false" downstream-caching-type="none" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <cache-store duration="60" />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

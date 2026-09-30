@@ -1,0 +1,36 @@
+<!--
+Recipe: Validate a Microsoft Entra ID token (plain API Management)
+
+Scenario:   Require and validate an Entra ID-issued access token for the
+            calling identity, restricted to specific client application IDs.
+Use when:   Your organization already uses Entra ID as its identity
+            provider — the common case for MCP servers per notebook 18.
+Requires:   Any API Management tier.
+Decision:   This exact policy is what secures both plain REST APIs and MCP
+            servers/AI Gateway endpoints — auth doesn't change based on
+            whether the backend is an LLM. See
+            docs/11_apim_vs_ai_gateway_decision_guide.md.
+-->
+<policies>
+  <inbound>
+    <base />
+    <validate-azure-ad-token
+        tenant-id="{{entra-tenant-id}}"
+        header-name="Authorization"
+        failed-validation-httpcode="401"
+        failed-validation-error-message="Unauthorized. Access token is missing or invalid.">
+      <client-application-ids>
+        <application-id>{{client-app-id}}</application-id>
+      </client-application-ids>
+    </validate-azure-ad-token>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

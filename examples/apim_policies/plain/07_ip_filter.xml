@@ -1,0 +1,26 @@
+<!--
+Recipe: Restrict caller IP addresses (plain API Management)
+
+Scenario:   Only allow calls from a known set of networks (a corporate VPN
+            range, a partner's egress IPs).
+Use when:   Network-level allow-listing is part of your access model,
+            regardless of what the backend is.
+Requires:   Any API Management tier.
+-->
+<policies>
+  <inbound>
+    <base />
+    <ip-filter action="allow">
+      <address-range from="203.0.113.0" to="203.0.113.255" />
+    </ip-filter>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
