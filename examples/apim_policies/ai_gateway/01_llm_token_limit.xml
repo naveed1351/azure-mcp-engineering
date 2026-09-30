@@ -1,0 +1,37 @@
+<!--
+Recipe: Token-aware rate limiting for any supported LLM backend (AI Gateway)
+
+Scenario:   Cap LLM token consumption per minute (and/or a longer quota
+            period), not call count — one long prompt can cost as much as
+            50 short ones.
+Use when:   The backend is an OpenAI Chat Completions/Responses, Anthropic
+            Messages, or Google Vertex AI-shaped API — any provider, not
+            just Azure OpenAI.
+Requires:   An API Management tier that supports AI Gateway MCP/LLM
+            policies (Developer/Basic/Basic v2/Standard/Standard v2/
+            Premium/Premium v2).
+Decision:   This is the multi-provider generalization of
+            02_azure_openai_token_limit.xml — prefer this one unless you
+            specifically need an Azure-OpenAI-only feature.
+-->
+<policies>
+  <inbound>
+    <base />
+    <llm-token-limit
+        counter-key="@(context.Subscription.Id)"
+        tokens-per-minute="10000"
+        token-quota="200000"
+        token-quota-period="Daily"
+        estimate-prompt-tokens="true"
+        remaining-tokens-variable-name="remainingTokens" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
