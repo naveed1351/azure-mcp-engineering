@@ -1,0 +1,27 @@
+<!--
+Recipe: Limit call rate by subscription (plain API Management)
+
+Scenario:   Cap call rate per API Management *subscription* (not a custom
+            key) — the simplest, built-in throttling mechanism.
+Use when:   Every consumer already has an API Management subscription key,
+            and per-subscription throttling is granular enough.
+Requires:   Any API Management tier.
+Decision:   Still no token/prompt awareness — this is plain APIM, useful
+            for MCP servers exposing simple tools just as much as for any
+            other REST API.
+-->
+<policies>
+  <inbound>
+    <base />
+    <rate-limit calls="100" renewal-period="60" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
