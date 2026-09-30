@@ -1,0 +1,24 @@
+<!--
+Recipe: Set a usage quota by subscription (plain API Management)
+
+Scenario:   Same as quota-by-key, but scoped to the built-in subscription
+            entity instead of a custom counter key.
+Use when:   Your products/subscriptions already map cleanly to "customers"
+            and you don't need a custom partitioning expression.
+Requires:   Any API Management tier.
+-->
+<policies>
+  <inbound>
+    <base />
+    <quota calls="50000" renewal-period="2592000" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
