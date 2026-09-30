@@ -1,0 +1,34 @@
+<!--
+Recipe: Authenticate to the backend with a managed identity (plain API
+Management)
+
+Scenario:   API Management calls a backend that trusts its own managed
+            identity — no per-tool credential manager connection needed.
+Use when:   The backend is another Azure resource (a Function App, a Logic
+            App, a Key Vault-fronted API) that accepts Entra ID auth from
+            API Management's system- or user-assigned identity directly.
+Requires:   Any API Management tier; the backend resource must grant the
+            managed identity an appropriate role.
+Decision:   Compare with credential manager (notebook 18): managed identity
+            auth is simpler when API Management's *own* identity is enough;
+            credential manager is for delegating to a *different*
+            identity/connection (for example, a user-delegated OAuth token).
+-->
+<policies>
+  <inbound>
+    <base />
+    <authentication-managed-identity resource="{{backend-resource-id}}" output-token-variable-name="msi-access-token" />
+    <set-header name="Authorization" exists-action="override">
+      <value>@("Bearer " + (string)context.Variables["msi-access-token"])</value>
+    </set-header>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
