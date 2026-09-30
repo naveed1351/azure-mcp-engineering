@@ -1,0 +1,38 @@
+<!--
+Recipe: A realistic combined governance pipeline (AI Gateway)
+
+Scenario:   Screen prompts for harmful content, THEN enforce a token
+            budget, THEN emit usage metrics — the order production
+            pipelines typically use: safety first, cost governance second,
+            observability last.
+Use when:   You're moving from individual policy snippets (01-09) to a
+            single MCP server or LLM API's real policy document.
+Requires:   Everything referenced by 01, 04, and 09 in this folder.
+-->
+<policies>
+  <inbound>
+    <base />
+    <llm-content-safety backend-id="content-safety-backend" shield-prompt="true">
+      <categories output-type="FourSeverityLevels">
+        <category name="Hate" threshold="2" />
+        <category name="Violence" threshold="2" />
+      </categories>
+    </llm-content-safety>
+    <llm-token-limit
+        counter-key="@(context.Subscription.Id)"
+        tokens-per-minute="10000"
+        estimate-prompt-tokens="true" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <llm-emit-token-metric namespace="llm-usage">
+      <dimension name="Subscription ID" value="@(context.Subscription.Id)" />
+    </llm-emit-token-metric>
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
