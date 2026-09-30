@@ -46,6 +46,7 @@ Jupyter notebooks.
 - [Node.js LTS](https://nodejs.org/) (used to launch the Azure MCP Server via `npx @azure/mcp@latest`)
 - The [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for `az login`
 - An Azure OpenAI resource (only needed for the function-calling notebooks)
+- An [Azure API Management instance](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance) on a tier that supports MCP servers (Developer through Premium v2) (only needed for notebooks 16-23 / Part 2)
 ## Repository structure
 
 ```text
