@@ -1,0 +1,30 @@
+<!--
+Recipe: Limit concurrent in-flight requests (plain API Management)
+
+Scenario:   Cap how many requests can be *simultaneously* processed for a
+            given key — distinct from a rate limit, which caps requests
+            over a time window.
+Use when:   A backend (database connection pool, a legacy service) can only
+            handle a small number of concurrent calls safely.
+Requires:   Any API Management tier.
+Decision:   Concurrency limits matter for LLM backends too (notebook 21
+            covers backend-level resiliency instead), but this policy
+            itself has nothing AI-specific about it.
+-->
+<policies>
+  <inbound>
+    <base />
+    <limit-concurrency key="@(context.Subscription?.Id ?? context.Request.IpAddress)" max-count="5">
+      <forward-request />
+    </limit-concurrency>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
