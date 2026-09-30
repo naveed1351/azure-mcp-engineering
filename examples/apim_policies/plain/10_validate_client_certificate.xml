@@ -1,0 +1,34 @@
+<!--
+Recipe: Require a client (mTLS) certificate (plain API Management)
+
+Scenario:   Authenticate the caller using a client certificate instead of
+            (or in addition to) a bearer token.
+Use when:   Machine-to-machine callers already carry a certificate, common
+            in regulated or partner-integration scenarios.
+Requires:   Any API Management tier; the gateway must be configured to
+            request client certificates.
+-->
+<policies>
+  <inbound>
+    <base />
+    <validate-client-certificate
+        validate-revocation="true"
+        validate-trust="true"
+        validate-not-before="true"
+        validate-not-after="true"
+        ignore-error="false">
+      <identities>
+        <identity thumbprint="{{expected-cert-thumbprint}}" />
+      </identities>
+    </validate-client-certificate>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
