@@ -59,3 +59,24 @@ number.
 - Added [docs/11_apim_vs_ai_gateway_decision_guide.md](docs/11_apim_vs_ai_gateway_decision_guide.md),
   the conceptual companion to notebook 23, cross-linked from the README,
   docs/06, docs/09, and docs/10.
+
+## Part 3: MCP protocol foundations
+
+- Added 5 new notebooks (`notebooks/24_*` through `notebooks/28_*`), the
+  first part of this course with **no Azure dependency** at all: JSON-RPC
+  2.0 message anatomy and the connection lifecycle, building a minimal MCP
+  server from scratch with the official SDK's `FastMCP` API, the
+  resources and prompts primitives the Azure MCP Server doesn't use,
+  server-initiated sampling and client-exposed roots, and a transports/
+  capability-negotiation recap tying Parts 1-3 together.
+- Added `examples/mcp_foundations/`: `custom_server.py` (a complete
+  `FastMCP` server exposing a tool, a sampling-using tool, an
+  elicitation-using tool, two resources, and a prompt) and
+  `raw_jsonrpc_client.py` (a hand-rolled, SDK-free client showing the exact
+  newline-delimited JSON-RPC bytes an MCP handshake produces), plus a
+  README index. Both scripts were run and verified end to end while
+  authoring these notebooks.
+- Added [docs/12_mcp_protocol_foundations.md](docs/12_mcp_protocol_foundations.md),
+  the conceptual companion to notebooks 24-28, and linked it from the
+  README's learning path table, structure, and resources.
+
