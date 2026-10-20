@@ -238,3 +238,45 @@ available identity. If access differs from `az account show`, inspect
 credential-chain diagnostics and explicit tool arguments. See
 [authentication](04_authentication.md) for the background. A successful
 login does not grant new RBAC permissions.
+
+## 5. Make your first local Azure MCP connection (01-05)
+
+Start with these notebooks in numerical order:
+
+| Notebook | What to run and what success looks like |
+| --- | --- |
+| [01: Introduction](../notebooks/01_introduction_to_mcp.ipynb) | Read the host/client/server explanation and run the environment probe. Python is reported and required command paths are found for your chosen route. |
+| [02: Server setup](../notebooks/02_setting_up_azure_mcp_server.ipynb) | Run version/account checks after terminal login. Confirm the active account and inspect configuration-presence checks; this does not provision resources. |
+| [03: First connection](../notebooks/03_first_mcp_client_connection.ipynb) | Run setup and the async connection cell. Initialization completes and tool information is printed, then the context manager closes the session. |
+| [04: Tool discovery](../notebooks/04_exploring_available_tools.ipynb) | List/group tools, inspect a schema, and export the catalog. Counts and names reflect the installed server, not a fixed expected count. |
+| [05: Direct calls](../notebooks/05_calling_tools_directly.ipynb) | List resource groups and storage accounts. Inspect returned content for actual results or explicit tool errors; the `does-not-exist` example intentionally demonstrates failure handling. |
+
+The [local client helper](../src/mcp_client.py) starts
+`npx -y @azure/mcp@latest server start` as a subprocess. Do not start another
+stdio server manually and wait for the notebook to connect to it: each
+client launches its own process. Initial startup may take longer while
+`npx` downloads the package. Standard output belongs to MCP protocol
+messages; diagnostic logging must go to standard error.
+
+You can preflight the launcher in the same terminal before starting Jupyter:
+
+```powershell
+npx -y @azure/mcp@latest --version
+```
+
+This should print a version and exit. It is not a cloud-access test.
+Since `@latest` is not pinned, record the reported version when diagnosing
+differences between runs.
+
+**Discover before calling.** Notebook 05 and later examples contain
+illustrative `azmcp_*` names and argument dictionaries. Compare them with
+the current `tools/list` results and `inputSchema`; names, required
+subscription arguments, modes, and namespace exposure can change. An
+unknown tool or a missing required argument is not evidence that your
+subscription has no resources. Use notebook 04 and
+[server modes](07_server_modes_and_advanced_config.md) to inspect the
+actual surface before adapting a call.
+
+Notebook 04 writes `tool_catalog.json` in the kernel working directory
+(normally `notebooks`). It may reveal internal names/descriptions; keep it
+local unless deliberately sanitized and reviewed.
