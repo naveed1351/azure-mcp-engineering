@@ -436,3 +436,56 @@ been implemented.
 See [protocol foundations](12_mcp_protocol_foundations.md) and the
 [standalone script instructions](../examples/mcp_foundations/README.md)
 for further context.
+
+## 9. Troubleshoot at the failing layer
+
+| Symptom | Check and recovery |
+| --- | --- |
+| `ModuleNotFoundError: src` or missing companion script | Confirm the kernel working directory is this checkout's `notebooks` folder, then rerun setup. |
+| `ModuleNotFoundError: mcp`, `openai`, or `dotenv` | Check `sys.executable`; install the repository requirements with that environment's Python and select its kernel. |
+| Missing `streamablehttp_client`, `ctx.elicit`, or incompatible SDK types | Inspect `python -m pip show mcp` in the selected environment. Use a current v1 SDK satisfying the repository requirements, not v2 or an old partially installed environment. |
+| PowerShell blocks `Activate.ps1` | Use the explicit `.venv\Scripts\python.exe` commands in section 2; changing system-wide execution policy is unnecessary. |
+| `npx`/`az` not found or `WinError 2` | Check `Get-Command npx, az` and notebook `shutil.which(...)` results. Restart the terminal/Jupyter after installing tools. On Windows, a shell-resolved `.cmd` launcher is not the same as an `.exe`; if a direct subprocess probe fails, diagnose its exact launcher path rather than assuming npm is missing. |
+| First connection takes a long time | Check npm/proxy connectivity and run the version preflight. Do not launch duplicate servers repeatedly while a package download is in progress. |
+| MCP JSON parse errors | Keep server stdout free of print/debug logs; use stderr. Confirm you launched a real MCP server rather than a shell command that prints unrelated output. |
+| Tool unknown, empty discovery, or invalid arguments | Rediscover tools for the active mode/namespaces and inspect `inputSchema`. Do not blindly reuse a historical `azmcp_*` name. |
+| `CallToolResult.isError` or error text without a Python exception | Treat it as a failed tool execution. Inspect and fix its arguments/permissions; a completed protocol exchange does not mean the operation succeeded. |
+| Azure 401/credential unavailable | Reauthenticate, inspect the selected tenant/credential chain, and restart the kernel. Check the token scope/audience without printing the token. |
+| Azure 403 | Confirm management-plane versus data-plane roles and resource scope; allow role propagation and check firewalls/private endpoints. Do not grant broad Owner access as a workaround. |
+| OpenAI 404 or unsupported API/tool behavior | Verify endpoint, actual deployment name, deployment availability, and API-version compatibility with the helper. |
+| APIM 401/403 | Check the failing API separately: MCP and model routes have different headers/scopes; inbound gateway auth and outbound backend auth are separate. |
+| APIM 404/405 or HTML instead of MCP messages | Verify the full MCP endpoint/transport and gateway routing. Do not use the portal URL or the LLM route as an MCP URL. |
+| 429/throttling | Respect retry timing, lower request frequency/tool scope, and inspect gateway/model quotas. A deliberate rate-limit test may correctly produce 429. |
+| `asyncio.run() cannot be called from a running event loop` | Use the notebook's top-level `await`; do not add a nested event loop. |
+| Updated `.env` seems ignored | Remove conflicting process-level variables if appropriate and restart the kernel. Values are loaded/cached; template placeholders also count as nonempty strings. |
+| Raw JSON-RPC cell prints nothing | Inspect `result.returncode` and `result.stderr` in notebook 24; reproduce with the terminal preflight to see startup failures. Redact sensitive diagnostics before sharing. |
+
+For a useful bug report, collect the notebook name, failing cell, Python
+executable/version, installed MCP version, server version (where relevant),
+and a redacted traceback/tool error. Do not attach `.env`, bearer tokens,
+subscription keys, Jupyter access URLs, or full private tool outputs.
+
+## 10. Finish, rerun safely, and control costs
+
+Before calling a route complete:
+
+- Confirm the expected evidence in the notebook table, not merely the
+  absence of a red Python traceback. Check tool-level errors too.
+- Run session cleanup cells, then shut down the notebook kernel. Stop the
+  Jupyter terminal with **Ctrl+C** when finished.
+- To reproduce, restart the kernel and run from the first setup cell.
+  Expect new model answers and potentially changed tool catalogs.
+- Clear outputs before committing notebooks that might contain private
+  data, and inspect `git status --short` for accidental generated files.
+  Remove only your own known generated `tool_catalog.json` if unwanted;
+  do not delete source notebooks or shared resources as "cleanup".
+- Keep `.env` local. A read-only server can still return sensitive data,
+  and a saved notebook can retain it after the kernel stops.
+- Review Azure costs. Stopping Jupyter does **not** stop or delete API
+  Management, model deployments, storage, databases, or other Azure
+  resources. Follow your lab's ownership/retention rules and remove only
+  resources you explicitly created and are authorized to delete.
+
+There is intentionally no blanket "execute all 28" command here: live
+Azure dependencies, placeholder calls, intentional errors, policy changes,
+and model charges need an explicit decision at each relevant notebook.

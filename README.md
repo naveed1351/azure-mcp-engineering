@@ -84,20 +84,23 @@ git clone https://github.com/naveed1351/azure-mcp-engineering.git
 cd azure-mcp-engineering
 
 # 2. Create and activate a virtual environment
-python -m venv venv
-venv\Scripts\activate
+python -m venv .venv
 
 # 3. Install dependencies
-pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r .\requirements.txt
 
 # 4. Sign in to Azure (the MCP server uses your Azure CLI credential by default)
 az login
 
-# 5. Copy the environment template and fill in your Azure OpenAI values
-copy .env.example .env
+# 5. Create local configuration without overwriting an existing file.
+# Fill in Azure OpenAI values only if running the model notebooks.
+if (-not (Test-Path -LiteralPath .\.env)) {
+    Copy-Item -LiteralPath .\.env.example -Destination .\.env
+}
 
-# 6. Launch Jupyter and start with notebooks/01_introduction_to_mcp.ipynb
-jupyter notebook notebooks/
+# 6. Launch Jupyter and start with 01_introduction_to_mcp.ipynb.
+# Select this environment's kernel; see the run guide for registration.
+.\.venv\Scripts\python.exe -m notebook --notebook-dir=.\notebooks
 ```
 
 You don't need to separately install the Azure MCP Server binary: the
