@@ -125,3 +125,50 @@ Verify the environment without contacting Azure:
 The executable should be inside this repository's `.venv`, and the MCP
 version should be below 2.0. Save dependency-resolution errors rather than
 continuing with a partially installed environment.
+
+## 3. Launch Jupyter and select the kernel
+
+Register a recognizable kernel, then launch Jupyter from the same terminal
+that can find Node.js and Azure CLI:
+
+```powershell
+.\.venv\Scripts\python.exe -m ipykernel install --user --name azure-mcp-engineering --display-name "Python (azure-mcp-engineering)"
+.\.venv\Scripts\python.exe -m notebook --notebook-dir=.\notebooks
+```
+
+Open the localhost URL printed by Jupyter; keep its access token private.
+Choose a notebook and select **Python (azure-mcp-engineering)** from its
+kernel menu. Leave the terminal running while working.
+
+Alternatively, open the repository in VS Code with the Python and Jupyter
+extensions, open a notebook, and use **Select Kernel > Python Environments**
+to choose `.venv\Scripts\python.exe`. Selecting a terminal interpreter alone
+does not guarantee the notebook uses the same kernel.
+
+Run this temporary diagnostic cell before the notebook's setup cell:
+
+```python
+import sys
+from pathlib import Path
+
+print("Python:", sys.executable)
+print("Working directory:", Path.cwd())
+assert Path.cwd().name == "notebooks", "Set the kernel working directory to this repo's notebooks folder"
+assert (Path.cwd().parent / "src" / "config.py").is_file()
+```
+
+Most notebook setup cells add `Path.cwd().parent` to `sys.path`, and
+notebooks 24-27 locate companion scripts relative to that same parent.
+The expected kernel working directory is this repository's `notebooks`
+folder, not the repository root. If VS Code starts the kernel elsewhere,
+set its notebook file root to `${fileDirname}` (the
+`jupyter.notebookFileRoot` setting), restart the kernel, and check again.
+Alternatively, explicitly change the kernel directory to the absolute
+path of this repository's `notebooks` folder before running setup cells.
+Do not work around an incorrect directory by copying helper modules.
+
+Run code cells from top to bottom with **Shift+Enter**. The notebooks use
+top-level `await`, supported by IPython; do not wrap those calls in
+`asyncio.run()` or paste them unchanged into a plain Python REPL.
+After fixing an interrupted run, restart the kernel and rerun setup rather
+than relying on stale variables or an old open MCP session.
