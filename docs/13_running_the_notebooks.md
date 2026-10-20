@@ -85,3 +85,43 @@ Reference: Microsoft's
 describes local prerequisites and authentication. This repository's
 [requirements](../requirements.txt) and notebook code remain the source
 of truth for the client APIs used here.
+
+## 2. Create an isolated Python environment
+
+If you already have this repository open, skip cloning and change to its
+root. Otherwise:
+
+```powershell
+git clone https://github.com/naveed1351/azure-mcp-engineering.git
+Set-Location azure-mcp-engineering
+```
+
+Create a virtual environment with your chosen Python interpreter:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r .\requirements.txt
+.\.venv\Scripts\python.exe -m pip check
+```
+
+Stop if installation fails. `pip check` should report
+`No broken requirements found.` Explicitly using the environment's Python
+avoids installing into a different interpreter and works without changing
+PowerShell's script execution policy. If you prefer activation, use
+`.\.venv\Scripts\Activate.ps1`, then still use `python -m pip` rather than a
+potentially unrelated `pip` executable.
+
+The manifest installs Jupyter, ipykernel, the MCP SDK, Azure Identity, and
+the OpenAI client. It also includes the PyPI Azure MCP launcher, although
+the local Azure examples actually launch the npm package with `npx`.
+Do not replace the requirements with an unbounded `pip install mcp`.
+
+Verify the environment without contacting Azure:
+
+```powershell
+.\.venv\Scripts\python.exe -c "import sys; from importlib.metadata import version; import mcp, azure.identity, openai, dotenv; print(sys.executable); print('mcp', version('mcp'))"
+```
+
+The executable should be inside this repository's `.venv`, and the MCP
+version should be below 2.0. Save dependency-resolution errors rather than
+continuing with a partially installed environment.
