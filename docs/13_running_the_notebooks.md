@@ -37,3 +37,51 @@ Reading notebook text does not require cloud resources.
 The commands in this guide use Windows PowerShell. Run terminal commands
 from the repository root unless a step explicitly says otherwise; run
 Python cells in the notebook kernel.
+
+## 1. Check prerequisites
+
+Use Python 3.11 or 3.12 for a straightforward starting environment.
+The repository's introductory material says Python 3.9+, but the resolved
+versions of the MCP SDK and other dependencies can require a newer Python.
+This guide does not change the project's declared support range. Keep
+the repository's `mcp<2.0.0` constraint: the remote client uses the v1 SDK's
+`streamablehttp_client` API.
+
+Install [Python](https://www.python.org/downloads/) and
+[Git](https://git-scm.com/downloads). For the local Azure MCP Server route,
+also install [Node.js LTS](https://nodejs.org/) and the
+[Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli).
+Then open a new PowerShell terminal so PATH changes take effect.
+
+```powershell
+python --version
+git --version
+
+# Needed for the local Azure MCP Server route, not notebooks 24-28:
+node --version
+npx --version
+az --version
+```
+
+Each applicable command should print a version, not "command not found".
+Corporate proxies must allow Python package downloads and, for the local
+Azure route, npm package downloads and the Azure endpoints you use.
+Do not bypass certificate validation to work around proxy errors.
+
+For cloud exercises, confirm you have:
+
+- An active Azure subscription and the correct tenant.
+- Permission to read the resources you intend to inspect. Management-plane
+  Reader access does not automatically grant blob or Key Vault data access.
+- For LLM notebooks, a deployed Azure OpenAI model that supports tool
+  calling, its deployment name and endpoint, and an appropriate inference
+  role (the notebooks use **Cognitive Services User**).
+- For live gateway exercises, an API Management tier that supports the
+  required MCP/AI gateway feature, permission to configure it, and accessible
+  backends. Check current feature availability before provisioning.
+
+Reference: Microsoft's
+[Azure MCP Server Python quickstart](https://learn.microsoft.com/azure/developer/azure-mcp-server/get-started/languages/python)
+describes local prerequisites and authentication. This repository's
+[requirements](../requirements.txt) and notebook code remain the source
+of truth for the client APIs used here.
