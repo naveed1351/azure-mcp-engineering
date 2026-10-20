@@ -75,6 +75,9 @@ gallery covering nearly every remaining Azure MCP Server namespace -- see
 [docs/09_example_gallery.md](docs/09_example_gallery.md) for the full index.
 ## Quick start
 
+For kernel setup, per-notebook requirements, Azure-free exercises, and
+troubleshooting, follow the [notebook run guide](docs/13_running_the_notebooks.md).
+
 ```powershell
 # 1. Clone and enter the repo
 git clone https://github.com/naveed1351/azure-mcp-engineering.git
