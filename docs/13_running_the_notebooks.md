@@ -172,3 +172,69 @@ top-level `await`, supported by IPython; do not wrap those calls in
 `asyncio.run()` or paste them unchanged into a plain Python REPL.
 After fixing an interrupted run, restart the kernel and rerun setup rather
 than relying on stale variables or an old open MCP session.
+
+## 4. Configure Azure authentication and environment values
+
+Skip this section for notebooks 24-28. For Azure work, sign in from a
+repository-root terminal and select the intended subscription:
+
+```powershell
+az login
+az account list --output table
+az account set --subscription "<your-subscription-id>"
+az account show --query "{subscription:id,tenant:tenantId,name:name}" --output table
+```
+
+Replace the subscription placeholder before running. For a specific tenant,
+use `az login --tenant "<your-tenant-id>"`; if browser login is unavailable,
+use `az login --use-device-code` where your organization's policies permit.
+Never paste login codes or tokens into a notebook.
+
+Copy the template only if you do not already have a local configuration:
+
+```powershell
+if (-not (Test-Path -LiteralPath .\.env)) {
+    Copy-Item -LiteralPath .\.env.example -Destination .\.env
+}
+```
+
+Edit the root `.env`, not the template:
+
+| Variable | Set it when |
+| --- | --- |
+| `AZURE_OPENAI_ENDPOINT` | Running 06-07; use the real Azure OpenAI resource endpoint |
+| `AZURE_OPENAI_MODEL` | Running LLM cells; this is the **deployment name**, not necessarily the model's catalog name |
+| `AZURE_SUBSCRIPTION_ID`, `AZURE_TENANT_ID` | Useful configuration metadata; these fields alone do not force every helper/tool to use that subscription or tenant |
+| `APIM_MCP_SERVER_URL` | Connecting to the actual gateway MCP endpoint in 17, 18, or 22, including its `/mcp` path |
+| `APIM_SUBSCRIPTION_KEY` | The target gateway API/product requires a subscription key |
+| `APIM_MCP_SCOPE` | Acquiring a token for the MCP API's Entra app in 18, typically `api://<app-id>/.default` |
+| `APIM_GATEWAY_ENDPOINT` | Calling the OpenAI-compatible gateway API in 21-22, not the MCP endpoint |
+
+Remove unused placeholder values or leave those variables empty. For
+example, the template's nonempty fake OpenAI endpoint passes the helper's
+"is configured" check but cannot serve requests. Notebooks 01-05 and
+08-15 do not need an Azure OpenAI endpoint.
+
+The [configuration helper](../src/config.py) loads `.env` at import and
+caches settings. Existing process environment variables take precedence
+over dotenv values. Restart the kernel after editing `.env` or changing
+credentials; clearing the settings cache alone does not reload the file.
+Verify presence without printing secrets:
+
+```python
+from src.config import get_settings
+
+settings = get_settings()
+print("OpenAI endpoint configured:", bool(settings.azure_openai_endpoint))
+print("MCP gateway configured:", bool(settings.apim_mcp_server_url))
+```
+
+Run this after the notebook's `sys.path` setup cell.
+
+The Python OpenAI/APIM helpers use `DefaultAzureCredential`; Azure MCP
+Server has its own authentication behavior. Azure CLI login is a convenient
+local credential, not a guarantee that every chain chooses it over another
+available identity. If access differs from `az account show`, inspect
+credential-chain diagnostics and explicit tool arguments. See
+[authentication](04_authentication.md) for the background. A successful
+login does not grant new RBAC permissions.
