@@ -319,3 +319,70 @@ until their inputs and permissions are ready.
   endpoint. Repeating a cell can repeat a charge or an operation. Read-only
   tool mode reduces mutation risk; it does not eliminate disclosure or
   billing risk.
+
+## 7. Prepare and run the API Management route (16-23)
+
+These notebooks mix explanatory text, portal instructions, XML/Bicep
+examples, and live Python requests. Reading a policy or parsing XML locally
+does not apply it to a gateway. You can study the route without provisioning
+anything; live cells require the infrastructure and authentication below.
+
+### Prepare the gateway before live requests
+
+1. Use a lab API Management instance with current support for the features
+   you intend to test. Check
+   [MCP server support](https://learn.microsoft.com/azure/api-management/mcp-server-overview)
+   and the [AI gateway overview](https://learn.microsoft.com/azure/api-management/genai-gateway-capabilities)
+   for tier and feature limitations.
+2. For 17, import a suitable REST API and expose selected operations as an
+   MCP server using the notebook's portal instructions. For 20's federation
+   route, first have a reachable existing MCP backend instead. A local
+   stdio subprocess is not a public HTTP backend.
+3. Choose inbound authentication, associate any required product, configure
+   backend authentication separately, and copy the real MCP endpoint to
+   `.env`. A subscription key and an Entra bearer token serve different
+   purposes; some configurations require both.
+4. For 21-22, configure an OpenAI-compatible API route and model backend in
+   the gateway, with the intended deployment name and backend permissions.
+   Set `APIM_GATEWAY_ENDPOINT` to this route, not to `/mcp`.
+5. Restart the kernel after updating configuration. Verify MCP discovery
+   before enabling tool calls, then verify the model route separately
+   before combining them.
+
+The remote helper uses Streamable HTTP and opens the configured gateway
+endpoint; it does not start the Azure MCP npm server.
+
+| Notebook | Run instructions and expected evidence |
+| --- | --- |
+| [16: Gateway fundamentals](../notebooks/16_apim_ai_gateway_fundamentals.ipynb) | Read the architecture/tier guidance and inspect constructed URLs. The sample `my-apim-instance`/`weather-mcp` values are not deployed services. |
+| [17: REST API as MCP](../notebooks/17_exposing_rest_apis_as_mcp_servers.ipynb) | Complete portal setup, then list tools through the real endpoint. **Inspect `first.inputSchema` and the operation's effects before the `call_first_tool` cell**: it sends `{}` to the first returned tool and is not generically safe or valid. Supply required arguments or skip it. |
+| [18: Entra security](../notebooks/18_securing_mcp_servers_with_entra_id.ipynb) | Configure the Entra app, allowed audience/tenant, and policy first; set the actual scope. Token acquisition and gateway token validation must both succeed. Add a subscription key to the connection if your product also requires one. |
+| [19: Governance](../notebooks/19_mcp_server_policies_and_governance.ipynb) | Run the local XML example, then adapt and apply policies deliberately in the lab portal. Local XML parsing is not gateway policy validation. Confirm enforcement with controlled requests. |
+| [20: Federation and discovery](../notebooks/20_federating_existing_mcp_servers_and_discovery.ipynb) | Follow portal/backend setup and replace `<subscription-id>`, `<resource-group>`, and `<apim-service-name>` in the ARM example; `.env` does not replace these code literals. The management call needs ARM permissions, independently of MCP endpoint access. |
+| [21: LLM resiliency](../notebooks/21_ai_gateway_llm_backends_and_resiliency.ipynb) | Configure the gateway model route before sending chat requests. Load balancing, caching, and token policies require their described backends/services; a single successful chat request does not prove failover. |
+| [22: Gateway capstone](../notebooks/22_end_to_end_agent_over_apim_gateway.ipynb) | Verify both endpoint values, model deployment, and required credentials before running the live cells. Expect discovered tools and a final chat answer; the initial missing-config message is informational and does not prevent later cells from running. |
+| [23: Policy choice](../notebooks/23_choosing_apim_vs_ai_gateway.ipynb) | Run the local decision/recipe exploration. Use the companion recipes to choose policies; applying them and provisioning optional services is a separate step. |
+
+### Match each API's authentication
+
+The sample calls in 17 and 22 pass `APIM_SUBSCRIPTION_KEY` to the MCP
+connection. Notebook 18 demonstrates passing a bearer token instead.
+If your MCP API requires Entra authentication, acquire the appropriate
+MCP-scope token and pass `bearer_token` through the existing
+`connect_apim_mcp(...)` parameter on **every** relevant connection, including
+discovery and tool execution. Add the key too if required. Merely setting
+`APIM_MCP_SCOPE` does not change 17 or 22's connection arguments.
+
+The model route in 21-22 supplies a Cognitive Services bearer token.
+If the gateway model API also requires a subscription key, adapt the
+`AzureOpenAI` client headers to include `Ocp-Apim-Subscription-Key`;
+configuring the key for MCP calls does not automatically add it to chat
+requests. Never print either credential while diagnosing 401/403 errors.
+
+For policy recipes, correlation-header adaptation, and background, see
+[the APIM companion](10_apim_ai_gateway_and_mcp.md),
+[the policy decision guide](11_apim_vs_ai_gateway_decision_guide.md), and
+[the recipe index](../examples/apim_policies/README.md). The current remote
+helper accepts subscription/token credentials, not an arbitrary `headers`
+argument; the capstone's correlation-ID discussion requires explicit
+helper adaptation before those headers can be forwarded.
