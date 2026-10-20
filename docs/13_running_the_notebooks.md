@@ -386,3 +386,53 @@ For policy recipes, correlation-header adaptation, and background, see
 helper accepts subscription/token credentials, not an arbitrary `headers`
 argument; the capstone's correlation-ID discussion requires explicit
 helper adaptation before those headers can be forwarded.
+
+## 8. Run the Azure-free protocol route (24-28)
+
+Complete the Python installation and kernel setup in sections 1-3, then
+skip Azure login and `.env` configuration. After installing dependencies,
+these exercises communicate with local Python subprocesses and do not need
+an Azure subscription, Node.js, API Management, or a real model endpoint.
+
+Keep the full checkout: the notebooks launch
+[custom_server.py](../examples/mcp_foundations/custom_server.py) and
+[raw_jsonrpc_client.py](../examples/mcp_foundations/raw_jsonrpc_client.py).
+Downloading only the notebook files will not work. The server is launched
+using `sys.executable`, so it inherits the notebook's selected Python.
+
+| Notebook | Expected evidence |
+| --- | --- |
+| [24: Lifecycle and JSON-RPC](../notebooks/24_mcp_lifecycle_and_jsonrpc.ipynb) | The raw client shows initialize, discovery, and a tool-call exchange. If the captured output is blank, check the subprocess return code and stderr instead of assuming success. |
+| [25: Custom server](../notebooks/25_building_a_custom_mcp_server.ipynb) | Discovery includes `add`, `generate_poem`, and `book_table`, the fixed server-info resource, and the `greet_user` prompt. Calling `add(5, 7)` returns text representing `12`. |
+| [26: Resources and prompts](../notebooks/26_mcp_resources_and_prompts.ipynb) | Resource reads return greeting/server-info text; getting `greet_user` returns prompt messages, not a model-generated greeting. A templated resource is distinct from a fixed resource entry. |
+| [27: Sampling and roots](../notebooks/27_mcp_sampling_and_roots.ipynb) | The sampling callback prints the server's request and returns the fixed stand-in poem. Roots capability is advertised; the sample server does not actually request a roots listing. |
+| [28: Transports recap](../notebooks/28_mcp_transports_and_capability_recap.ipynb) | Read the transport/capability comparison. This is a conceptual recap, not a command to launch a remote HTTP service. |
+
+For a terminal-only preflight, run from the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe .\examples\mcp_foundations\raw_jsonrpc_client.py
+```
+
+Expect a completed JSON-RPC conversation and process exit, not a waiting
+server prompt. If you launch `custom_server.py` directly instead, waiting
+silently on stdin is normal: it needs an MCP client, not typed Python
+commands. Stop that manually launched process with **Ctrl+C**; the
+notebooks create their own server processes.
+
+Notebook 27's roots callback uses `file:///tmp/project` as illustrative
+metadata, not as a directory you must create on Windows. For a real root,
+use a directory you intend to expose and convert its absolute path with
+`Path(...).resolve().as_uri()`. Advertising roots is not an operating-system
+sandbox and does not grant or enforce filesystem permissions by itself.
+
+The stand-in sampling callback makes this route free of LLM API charges.
+Replacing it with a real model call is an optional code exercise with its
+own authentication, cost, and consent requirements. Likewise, the custom
+server's elicitation tool needs an elicitation-capable client to handle
+the confirmation path; listing the tool is not proof that a callback has
+been implemented.
+
+See [protocol foundations](12_mcp_protocol_foundations.md) and the
+[standalone script instructions](../examples/mcp_foundations/README.md)
+for further context.
