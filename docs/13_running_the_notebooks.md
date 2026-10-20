@@ -280,3 +280,42 @@ actual surface before adapting a call.
 Notebook 04 writes `tool_catalog.json` in the kernel working directory
 (normally `notebooks`). It may reveal internal names/descriptions; keep it
 local unless deliberately sanitized and reviewed.
+
+## 6. Continue with models, services, and workflows (06-15)
+
+Complete the first-connection checks before this route. The service
+notebooks do not create all the accounts, vaults, databases, clusters, or
+workspaces they discuss. Replace sample identifiers in code cells with
+resources you are allowed to query; leave optional example calls commented
+until their inputs and permissions are ready.
+
+| Notebook | Additional preparation and completion check |
+| --- | --- |
+| [06: Function calling](../notebooks/06_azure_openai_function_calling.ipynb) | Configure OpenAI endpoint/deployment and inference RBAC. Expect a chat response, any requested tool calls, and a final response incorporating results. A model can also answer without choosing a tool. |
+| [07: Conversational agent](../notebooks/07_building_a_conversational_agent.ipynb) | Reuse 06's setup. Run the simulated prompts in order; conversation history persists within the agent. Review resource information before sharing responses. |
+| [08: Storage and Key Vault](../notebooks/08_storage_and_keyvault_tools.ipynb) | Use existing accounts/vaults. Supply a real account when enabling container-list calls. Blob data and vault secret operations require their own data-plane roles; listing management resources is a separate permission. |
+| [09: Resource management](../notebooks/09_resource_management_tools.ipynb) | Confirm subscription scope and access for subscription/group/RBAC discovery. Only enable compute/AKS/container examples for resources you own. |
+| [10: Data and analytics](../notebooks/10_data_and_analytics_tools.ipynb) | Prepare the specific database or Monitor/Kusto workspace for any optional calls; replace database/workspace/query placeholders. No matching log rows can be legitimate; authorization/query errors are not. |
+| [11: DevOps and deployment](../notebooks/11_devops_and_deployment_tools.ipynb) | Inspect the discovered deployment-related schemas. Bicep/Terraform/azd snippets illustrate a workflow, not a repository-wide deployment command. Install extra deployment tools only if you choose those exercises. |
+| [12: Modes and namespaces](../notebooks/12_server_modes_namespaces.ipynb) | Compare generated server arguments and tool exposure. Different modes can expose different tool shapes; compare schemas as well as counts. |
+| [13: Errors and retries](../notebooks/13_error_handling_and_retries.ipynb) | Expect intentional failures and retry/backoff demonstrations. Read both Python exceptions and tool-level error content; do not retry authorization or invalid-input failures indefinitely. |
+| [14: Security and RBAC](../notebooks/14_security_elicitation_rbac.ipynb) | Inspect annotations and read-only settings. Do not call secret-returning tools merely to test access; these helpers are not a full interactive consent UI. |
+| [15: Multi-server workflows](../notebooks/15_advanced_multi_agent_workflows.ipynb) | Register the local client and replace `rg-example` and query inputs before diagnostics. Missing access or an unavailable log tool may prevent that part of the illustrative workflow. Adding another server/agent is an exercise. |
+
+### Model and session caveats
+
+- The [OpenAI helper](../src/azure_openai_helper.py) uses Entra ID, not an
+  OpenAI API key, and currently sets API version `2024-04-01-preview`.
+  Confirm your deployment supports that API and tool calling. A deployment
+  name typo commonly appears as a 404, not a Python import problem.
+- Sending a very large tool catalog may exceed a model's tool-count or
+  context limits. Use the existing `build_server_params(namespaces=[...],
+  read_only=True)` pattern to expose only the namespaces needed for your
+  exercise, and rediscover schemas after reconnecting.
+- Notebooks 06, 07, and 15 open a client across cells. Always execute the
+  final `__aexit__` cleanup cell. After an exception, close any open client
+  if possible and restart the kernel before opening another session.
+- LLM calls cost money and can send tool results to the configured model
+  endpoint. Repeating a cell can repeat a charge or an operation. Read-only
+  tool mode reduces mutation risk; it does not eliminate disclosure or
+  billing risk.
