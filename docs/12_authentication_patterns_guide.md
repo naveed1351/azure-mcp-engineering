@@ -136,3 +136,69 @@ secret to leak, rotate, or expire.
 **What it is not for:** your own laptop, or anything outside Azure (GitHub
 Actions runners, on-premises servers, another cloud) — `ManagedIdentityCredential`
 only works on infrastructure Azure itself is managing.
+
+## Pattern 3 — Service principal (client secret)
+
+When your automation runs **outside** Azure — a CI/CD pipeline, a
+third-party scheduler, a developer's long-running background job — managed
+identity isn't available, so you create a **service principal**: an app
+registration with its own credential (a client secret or certificate) that
+you store securely and provide to your pipeline.
+
+Create one scoped to only what it needs (never subscription-wide
+**Owner**):
+
+```powershell
+az ad sp create-for-rbac \
+  --name "sp-azure-mcp-engineering-ci" \
+  --role "Reader" \
+  --scopes "/subscriptions/<your-subscription-id>/resourceGroups/<your-resource-group>"
+```
+
+This prints `appId`, `password`, and `tenant`. Store the `password`
+immediately in a secret store (GitHub Actions secrets, Azure Key Vault,
+your CI system's secret manager) — it is shown only once and is never
+recoverable afterward.
+
+`azure-identity`'s `EnvironmentCredential` (and therefore
+`DefaultAzureCredential`) automatically reads three standard environment
+variable names, so setting them is often enough without changing any code:
+
+```powershell
+$env:AZURE_TENANT_ID = "<tenant-from-output>"
+$env:AZURE_CLIENT_ID = "<appId-from-output>"
+$env:AZURE_CLIENT_SECRET = "<password-from-output>"
+```
+
+Or construct the credential explicitly when you want to be unambiguous
+about which identity is being used:
+
+```python
+from azure.identity import ClientSecretCredential
+
+credential = ClientSecretCredential(
+    tenant_id="<tenant-id>",
+    client_id="<app-id>",
+    client_secret="<client-secret>",  # from a secret store, never hardcoded
+)
+```
+
+The Azure CLI itself also supports signing in as a service principal
+(useful for testing the exact identity your pipeline will use, or for
+driving the Azure MCP Server's own credential chain mode non-interactively):
+
+```powershell
+az login --service-principal `
+  --username "<app-id>" `
+  --password "<client-secret>" `
+  --tenant "<tenant-id>"
+```
+
+**When to use it:** CI/CD and any automation outside Azure's management
+boundary. Prefer a short-lived federated credential (Workload Identity
+Federation / OIDC) over a long-lived client secret where your CI platform
+supports it — see [Further resources](#further-resources).
+
+**What it is not for:** interactive development (use Pattern 1) or anything
+already running inside Azure (use Pattern 2 instead — it avoids the secret
+entirely).
