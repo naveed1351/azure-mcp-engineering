@@ -11,6 +11,11 @@ authentication modes:
   environment variables, Visual Studio Code, Visual Studio, Azure CLI, Azure
   PowerShell, Azure Developer CLI, and finally interactive browser
   authentication.
+
+> **Running without an interactive user present?** See
+> [12_authentication_patterns_guide.md](12_authentication_patterns_guide.md)
+> for managed identity and service principal patterns, plus runnable
+> examples for each.
 ## Signing in for local development
 
 Pick whichever tool you already use:
