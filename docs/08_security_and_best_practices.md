@@ -10,6 +10,11 @@ can never do more than your account is already allowed to do, but it also
 means a poorly-scoped account (e.g. Owner on a whole subscription) makes an
 agent built on top of it just as risky as that role would be for you
 personally.
+
+> See [12_authentication_patterns_guide.md](12_authentication_patterns_guide.md)
+> for which credential type (Azure CLI, managed identity, or service
+> principal) to choose for a given environment, including when a managed
+> identity is the more secure choice than a stored secret.
 ## Elicitation, revisited
 
 Elicitation (see [05_tools_reference.md](05_tools_reference.md)) is your last
