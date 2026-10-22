@@ -31,6 +31,10 @@ Jupyter notebooks.
 - Security concepts: RBAC, elicitation (user confirmation for secrets), and tool
   annotations (destructive / idempotent / read-only / secret / local-required).
 - Advanced patterns: multi-server MCP clients and composing custom workflows.
+- Choosing and configuring the right Entra ID authentication pattern --
+  Azure CLI sign-in for local development, managed identity for workloads
+  running inside Azure, and service principals for CI/CD -- see
+  [docs/12_authentication_patterns_guide.md](docs/12_authentication_patterns_guide.md).
 - **Part 2:** Exposing your own MCP servers and LLM backends through Azure
   API Management's AI gateway -- REST-API-backed and federated MCP servers,
   Entra ID security, governance policies, and resiliency for both MCP tools
