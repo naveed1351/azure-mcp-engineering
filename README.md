@@ -31,6 +31,10 @@ Jupyter notebooks.
 - Security concepts: RBAC, elicitation (user confirmation for secrets), and tool
   annotations (destructive / idempotent / read-only / secret / local-required).
 - Advanced patterns: multi-server MCP clients and composing custom workflows.
+- Choosing and configuring the right Entra ID authentication pattern --
+  Azure CLI sign-in for local development, managed identity for workloads
+  running inside Azure, and service principals for CI/CD -- see
+  [docs/12_authentication_patterns_guide.md](docs/12_authentication_patterns_guide.md).
 - **Part 2:** Exposing your own MCP servers and LLM backends through Azure
   API Management's AI gateway -- REST-API-backed and federated MCP servers,
   Entra ID security, governance policies, and resiliency for both MCP tools
@@ -61,7 +65,7 @@ azure-mcp-engineering/
 ├── docs/                Conceptual reference notes, mirroring Microsoft Learn
 ├── notebooks/           28 Jupyter notebooks: 01-15 fundamentals, 16-23 APIM AI gateway/MCP, 24-28 protocol foundations
 ├── src/                 Reusable Python helper modules imported by the notebooks/examples
-├── examples/            54 standalone scripts, plus apim_policies/ (30 recipes) and mcp_foundations/ (2 scripts)
+├── examples/            58 standalone scripts, plus examples/apim_policies/ (30 APIM policy recipes)
 ├── requirements.txt     Python dependencies for the whole course
 ├── .env.example         Template for the environment variables the code expects
 └── README.md            You are here

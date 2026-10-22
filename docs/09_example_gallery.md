@@ -114,6 +114,21 @@ vault, endpoint, etc.) say so in their module docstring and use obvious
 | [47_virtualdesktop_demo.py](../examples/47_virtualdesktop_demo.py) | `virtualdesktop` | `azmcp_virtualdesktop_hostpool_list` |
 | [19_confidentialledger_demo.py](../examples/19_confidentialledger_demo.py) | `confidentialledger` | `azmcp_confidentialledger_entries_get` |
 
+## A different kind of example: authentication pattern demos
+
+Scripts 55-58 are not namespace demos either -- they isolate the
+`azure-identity` credential itself, independent of any `azmcp_*` tool call,
+so you can see exactly which identity your code or pipeline authenticates
+as. See [12_authentication_patterns_guide.md](12_authentication_patterns_guide.md)
+for the full explanation of when to reach for each one.
+
+| Script | Pattern | What it shows |
+| --- | --- | --- |
+| [55_auth_cli_credential_demo.py](../examples/55_auth_cli_credential_demo.py) | Azure CLI sign-in | `AzureCliCredential` acquiring a token from your `az login` session |
+| [56_auth_managed_identity_demo.py](../examples/56_auth_managed_identity_demo.py) | Managed identity | `ManagedIdentityCredential`, system- or user-assigned, for code running inside Azure |
+| [57_auth_service_principal_demo.py](../examples/57_auth_service_principal_demo.py) | Service principal | `ClientSecretCredential` for CI/CD and other unattended automation |
+| [58_auth_credential_chain_diagnostics.py](../examples/58_auth_credential_chain_diagnostics.py) | Diagnostic | Tries each credential individually and reports which one `DefaultAzureCredential` would actually pick |
+
 ## Notes on tool names and arguments
 
 - Tool names mirror the `azmcp` CLI command path with spaces replaced by

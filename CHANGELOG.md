@@ -4,6 +4,24 @@ Notable changes to this learning repository. This project doesn't ship
 versioned releases; entries are grouped by topic instead of a version
 number.
 
+## Authentication patterns guide
+
+- Added [docs/12_authentication_patterns_guide.md](docs/12_authentication_patterns_guide.md):
+  a practical, side-by-side guide to the three Entra ID authentication
+  patterns used with the Azure MCP Server and this repo's Python helpers --
+  Azure CLI sign-in for local development, managed identity for workloads
+  running inside Azure, and service principals for CI/CD -- including a
+  decision tree and a troubleshooting section for common credential chain
+  failures.
+- Added 4 new standalone demo scripts (`examples/55_*` through
+  `examples/58_*`) that isolate `azure-identity` credential classes
+  (`AzureCliCredential`, `ManagedIdentityCredential`, `ClientSecretCredential`)
+  directly, plus a diagnostic script that reports which credential
+  `DefaultAzureCredential` would actually select.
+- Cross-linked the new guide from
+  [docs/04_authentication.md](docs/04_authentication.md),
+  [docs/09_example_gallery.md](docs/09_example_gallery.md), and the README.
+
 ## Example gallery expansion
 
 - Added 44 new standalone demo scripts (`examples/11_*` through

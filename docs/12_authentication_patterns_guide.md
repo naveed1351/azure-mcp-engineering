@@ -1,0 +1,279 @@
+# 12 — Azure MCP Server Authentication Patterns: A Guide
+
+This guide expands on [04_authentication.md](04_authentication.md) with a
+practical, side-by-side look at the three authentication patterns you'll
+actually choose between when running the Azure MCP Server and the Python
+helpers in this repository: interactive developer sign-in via the **Azure
+CLI**, **managed identity** for workloads already running in Azure, and
+**service principal** credentials for CI/CD and other unattended automation.
+
+It pairs with four runnable scripts in [`examples/`](09_example_gallery.md)
+(55-58) that exercise each pattern directly with the `azure-identity`
+library, independent of any specific Azure MCP tool call.
+
+## Why this matters beyond `az login`
+
+Every example in notebooks 01-15 and 24-28 assumes you've already signed in
+once with `az login` and moves on. That's the right default for learning,
+but it hides an important fact: **the Azure MCP Server and this repo's
+Python helpers (`src/azure_openai_helper.py`, `src/apim_mcp_client.py`) each
+resolve credentials independently**, through their own instance of a
+credential chain. Understanding what's actually in that chain — and in what
+order — is what lets you reason about:
+
+- Why a tool call authenticates as a different identity than you expect.
+- How to run the same code unattended in a pipeline or inside an Azure
+  resource, with no human available to run `az login`.
+- Which failure (`CredentialUnavailableError`, `ClientAuthenticationError`,
+  an RBAC `403`) points at *which* layer of the chain.
+
+## At a glance
+
+| Pattern | Typical use | Who/what it authenticates as | Needs a human present? |
+| --- | --- | --- | --- |
+| Azure CLI sign-in | Local development, this course's notebooks | Your own Entra ID user | Yes, once per session |
+| Managed identity | Code already running inside Azure (VM, Container App, Function, AKS pod) | An identity Azure itself manages — no stored secret | No |
+| Service principal (client secret) | CI/CD pipelines, scheduled jobs, anything outside Azure that can't use managed identity | An app registration you created and control | No, but a secret must be stored safely |
+
+Each is covered in its own section below, including the exact commands to
+set it up and the corresponding Python credential class.
+
+## Table of contents
+
+1. [Pattern 1 — Developer sign-in with the Azure CLI](#pattern-1--developer-sign-in-with-the-azure-cli)
+2. [Pattern 2 — Managed identity](#pattern-2--managed-identity)
+3. [Pattern 3 — Service principal (client secret)](#pattern-3--service-principal-client-secret)
+4. [Choosing the right pattern](#choosing-the-right-pattern)
+5. [Troubleshooting credential chain issues](#troubleshooting-credential-chain-issues)
+6. [Further resources](#further-resources)
+
+## Pattern 1 — Developer sign-in with the Azure CLI
+
+This is the pattern every notebook in this course uses. You sign in once
+per machine/session, and both the Azure MCP Server (via its credential
+chain mode) and this repo's Python helpers (via `DefaultAzureCredential`)
+pick up that session automatically through `AzureCliCredential`.
+
+```powershell
+# Sign in interactively (opens a browser)
+az login
+
+# If your organization has multiple tenants, be explicit:
+az login --tenant "<your-tenant-id>"
+
+# Pick the subscription everything should default to
+az account set --subscription "<your-subscription-id>"
+
+# Confirm what Azure CLI (and therefore AzureCliCredential) will report
+az account show --query "{subscription:id, tenant:tenantId, user:user.name}" --output table
+```
+
+`AzureCliCredential` works by shelling out to `az account get-access-token`
+behind the scenes — it does not read any stored password. That's why
+signing out of the CLI (`az logout`) or switching the active subscription
+with `az account set` immediately changes what every Python script and the
+Azure MCP Server itself authenticate as, with no code changes required.
+
+**When to use it:** local development, this course's notebooks, and any
+interactive terminal session where a person is present to approve the
+sign-in. It is the first pattern to reach for and the one this repository
+assumes by default.
+
+**What it is not for:** anything that needs to run unattended (a scheduled
+job, a CI pipeline, a server process with nobody watching) — `az login`
+needs either a browser or a device code a human must complete.
+
+## Pattern 2 — Managed identity
+
+If this repo's code (or the Azure MCP Server itself) runs *inside* Azure —
+on a VM, in a Container App, as an Azure Function, or on an AKS pod with
+workload identity configured — use a **managed identity** instead of any
+stored credential at all. Azure creates and rotates the underlying secret
+for you; your code never sees it.
+
+There are two flavors:
+
+| Flavor | Lifecycle | Typical use |
+| --- | --- | --- |
+| System-assigned | Created with and tied to one specific resource; deleted when the resource is deleted | A single Container App or Function that only ever needs its own identity |
+| User-assigned | Created independently, then attached to one or more resources | Sharing one identity across several resources, or needing the identity to outlive any one resource |
+
+Create a user-assigned identity and attach it (example: a Container App):
+
+```powershell
+az identity create --name "id-azure-mcp-demo" --resource-group "<your-resource-group>"
+az containerapp identity assign \
+  --name "<your-container-app>" \
+  --resource-group "<your-resource-group>" \
+  --user-assigned "<user-assigned-identity-resource-id>"
+```
+
+Then grant that identity whatever RBAC role it needs on the target
+resource (for example **Storage Blob Data Reader** on a storage account),
+the same way you would for your own user in [04_authentication.md](04_authentication.md#rbac-what-determines-what-you-can-do).
+
+In Python, request a token with `ManagedIdentityCredential` directly, or
+let `DefaultAzureCredential` find it automatically:
+
+```python
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+
+# System-assigned identity: no extra argument needed.
+credential = ManagedIdentityCredential()
+
+# User-assigned identity: pass its client ID explicitly.
+credential = ManagedIdentityCredential(client_id="<user-assigned-identity-client-id>")
+
+# Or let DefaultAzureCredential try managed identity as part of its chain,
+# the same chain src/azure_openai_helper.py and src/apim_mcp_client.py use.
+credential = DefaultAzureCredential(managed_identity_client_id="<user-assigned-identity-client-id>")
+```
+
+**When to use it:** any production-like Azure-hosted workload. It is
+strictly more secure than a service principal secret because there is no
+secret to leak, rotate, or expire.
+
+**What it is not for:** your own laptop, or anything outside Azure (GitHub
+Actions runners, on-premises servers, another cloud) — `ManagedIdentityCredential`
+only works on infrastructure Azure itself is managing.
+
+## Pattern 3 — Service principal (client secret)
+
+When your automation runs **outside** Azure — a CI/CD pipeline, a
+third-party scheduler, a developer's long-running background job — managed
+identity isn't available, so you create a **service principal**: an app
+registration with its own credential (a client secret or certificate) that
+you store securely and provide to your pipeline.
+
+Create one scoped to only what it needs (never subscription-wide
+**Owner**):
+
+```powershell
+az ad sp create-for-rbac \
+  --name "sp-azure-mcp-engineering-ci" \
+  --role "Reader" \
+  --scopes "/subscriptions/<your-subscription-id>/resourceGroups/<your-resource-group>"
+```
+
+This prints `appId`, `password`, and `tenant`. Store the `password`
+immediately in a secret store (GitHub Actions secrets, Azure Key Vault,
+your CI system's secret manager) — it is shown only once and is never
+recoverable afterward.
+
+`azure-identity`'s `EnvironmentCredential` (and therefore
+`DefaultAzureCredential`) automatically reads three standard environment
+variable names, so setting them is often enough without changing any code:
+
+```powershell
+$env:AZURE_TENANT_ID = "<tenant-from-output>"
+$env:AZURE_CLIENT_ID = "<appId-from-output>"
+$env:AZURE_CLIENT_SECRET = "<password-from-output>"
+```
+
+Or construct the credential explicitly when you want to be unambiguous
+about which identity is being used:
+
+```python
+from azure.identity import ClientSecretCredential
+
+credential = ClientSecretCredential(
+    tenant_id="<tenant-id>",
+    client_id="<app-id>",
+    client_secret="<client-secret>",  # from a secret store, never hardcoded
+)
+```
+
+The Azure CLI itself also supports signing in as a service principal
+(useful for testing the exact identity your pipeline will use, or for
+driving the Azure MCP Server's own credential chain mode non-interactively):
+
+```powershell
+az login --service-principal `
+  --username "<app-id>" `
+  --password "<client-secret>" `
+  --tenant "<tenant-id>"
+```
+
+**When to use it:** CI/CD and any automation outside Azure's management
+boundary. Prefer a short-lived federated credential (Workload Identity
+Federation / OIDC) over a long-lived client secret where your CI platform
+supports it — see [Further resources](#further-resources).
+
+**What it is not for:** interactive development (use Pattern 1) or anything
+already running inside Azure (use Pattern 2 instead — it avoids the secret
+entirely).
+
+## Choosing the right pattern
+
+```text
+Is a human present to approve a sign-in right now?
+├── Yes → Pattern 1: Azure CLI sign-in
+└── No
+    ├── Is this code running on Azure-managed infrastructure
+    │   (VM, Container App, Function, AKS with workload identity)?
+    │   ├── Yes → Pattern 2: Managed identity
+    │   └── No → Pattern 3: Service principal
+    │            (prefer workload identity federation/OIDC over a
+    │             long-lived client secret if your CI platform supports it)
+```
+
+| Signal you're seeing | Reach for |
+| --- | --- |
+| "I'm running notebooks/scripts on my own machine" | Pattern 1 |
+| "This needs to run every night with nobody watching, inside Azure" | Pattern 2 |
+| "This needs to run in GitHub Actions / Jenkins / another CI system" | Pattern 3 (ideally via OIDC, not a stored secret) |
+| "I want to test exactly what my CI pipeline's identity can access" | Pattern 3, using `az login --service-principal` locally |
+| "I'm worried about a leaked secret" | Prefer Pattern 2 wherever the workload can run inside Azure |
+
+All three patterns ultimately produce the same thing — an Entra ID access
+token — and RBAC enforcement afterward is identical regardless of which
+credential obtained it. Switching patterns never changes *what* an identity
+can do, only *how* it proves who it is.
+
+## Troubleshooting credential chain issues
+
+- **`CredentialUnavailableError`** — the credential you asked for isn't
+  usable in this environment (for example, `ManagedIdentityCredential` run
+  on a laptop with no managed identity endpoint). This is often expected
+  when using `DefaultAzureCredential`, which tries several credentials in
+  order and only raises once *all* of them fail; check which one you
+  actually intended to succeed.
+- **`ClientAuthenticationError: AADSTS7000215` (invalid client secret)** —
+  the stored secret has expired or was rotated; regenerate it with
+  `az ad sp credential reset` and update your secret store.
+- **`ClientAuthenticationError: AADSTS700016` (application not found)** —
+  double-check the `client_id`/`appId` and `tenant_id` match the app
+  registration you intended, not a different tenant's registration with a
+  similar name.
+- **Authenticating as the wrong identity** — environment variables
+  (`AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_TENANT_ID`) take
+  precedence over `az login` state in `DefaultAzureCredential`'s chain.
+  A leftover environment variable from a previous CI run or terminal
+  session is a common cause of "it worked yesterday, now it's the wrong
+  account."
+- **RBAC `403` after authentication clearly succeeded** — authentication
+  and authorization are separate layers; a valid token for the wrong
+  identity, or a correct identity without the right role assignment, both
+  produce the same style of error. Confirm *which* identity actually
+  obtained the token (see `examples/58_auth_credential_chain_diagnostics.py`
+  below) before changing role assignments.
+- **Managed identity works in the portal's "Test" button but not from your
+  code** — confirm you're passing the correct `client_id` for a
+  user-assigned identity; a system-assigned identity needs no `client_id`
+  at all, and mixing the two up is the most common failure mode.
+
+## Further resources
+
+- [docs/04_authentication.md](04_authentication.md) — the Azure MCP
+  Server's own credential chain mode and global authentication parameters.
+- [Azure Identity client library for Python](https://learn.microsoft.com/python/api/overview/azure/identity-readme)
+  — the authoritative reference for every credential class mentioned here.
+- [How Managed Identities work](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview)
+- [Use GitHub Actions to connect to Azure (OIDC)](https://learn.microsoft.com/azure/developer/github/connect-from-azure-openid-connect)
+  — the recommended alternative to a stored client secret for CI/CD.
+- [docs/08_security_and_best_practices.md](08_security_and_best_practices.md)
+  — least-privilege RBAC guidance that applies no matter which pattern you use.
+
+Continue to the runnable companions indexed in
+[09_example_gallery.md](09_example_gallery.md) (scripts 55-58) to see each
+pattern acquire a real token.
