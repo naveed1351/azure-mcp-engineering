@@ -82,3 +82,57 @@ assumes by default.
 **What it is not for:** anything that needs to run unattended (a scheduled
 job, a CI pipeline, a server process with nobody watching) — `az login`
 needs either a browser or a device code a human must complete.
+
+## Pattern 2 — Managed identity
+
+If this repo's code (or the Azure MCP Server itself) runs *inside* Azure —
+on a VM, in a Container App, as an Azure Function, or on an AKS pod with
+workload identity configured — use a **managed identity** instead of any
+stored credential at all. Azure creates and rotates the underlying secret
+for you; your code never sees it.
+
+There are two flavors:
+
+| Flavor | Lifecycle | Typical use |
+| --- | --- | --- |
+| System-assigned | Created with and tied to one specific resource; deleted when the resource is deleted | A single Container App or Function that only ever needs its own identity |
+| User-assigned | Created independently, then attached to one or more resources | Sharing one identity across several resources, or needing the identity to outlive any one resource |
+
+Create a user-assigned identity and attach it (example: a Container App):
+
+```powershell
+az identity create --name "id-azure-mcp-demo" --resource-group "<your-resource-group>"
+az containerapp identity assign \
+  --name "<your-container-app>" \
+  --resource-group "<your-resource-group>" \
+  --user-assigned "<user-assigned-identity-resource-id>"
+```
+
+Then grant that identity whatever RBAC role it needs on the target
+resource (for example **Storage Blob Data Reader** on a storage account),
+the same way you would for your own user in [04_authentication.md](04_authentication.md#rbac-what-determines-what-you-can-do).
+
+In Python, request a token with `ManagedIdentityCredential` directly, or
+let `DefaultAzureCredential` find it automatically:
+
+```python
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
+
+# System-assigned identity: no extra argument needed.
+credential = ManagedIdentityCredential()
+
+# User-assigned identity: pass its client ID explicitly.
+credential = ManagedIdentityCredential(client_id="<user-assigned-identity-client-id>")
+
+# Or let DefaultAzureCredential try managed identity as part of its chain,
+# the same chain src/azure_openai_helper.py and src/apim_mcp_client.py use.
+credential = DefaultAzureCredential(managed_identity_client_id="<user-assigned-identity-client-id>")
+```
+
+**When to use it:** any production-like Azure-hosted workload. It is
+strictly more secure than a service principal secret because there is no
+secret to leak, rotate, or expire.
+
+**What it is not for:** your own laptop, or anything outside Azure (GitHub
+Actions runners, on-premises servers, another cloud) — `ManagedIdentityCredential`
+only works on infrastructure Azure itself is managing.
