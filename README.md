@@ -42,6 +42,12 @@ Jupyter notebooks.
   when to reach for AI Gateway-specific policies versus plain API
   Management policies, with 30 ready-to-adapt recipes (notebook 23,
   `examples/apim_policies/`).
+- **Part 3 (no Azure required):** The MCP protocol itself -- JSON-RPC 2.0
+  message anatomy and the connection lifecycle, building a custom MCP
+  server from scratch with the official SDK, the resources/prompts
+  primitives the Azure MCP Server doesn't use, server-initiated sampling
+  and client-exposed roots, and how it all maps onto the transports used
+  throughout Parts 1-2 (notebooks 24-28).
 
 ### Prerequisites
 
@@ -51,12 +57,13 @@ Jupyter notebooks.
 - The [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for `az login`
 - An Azure OpenAI resource (only needed for the function-calling notebooks)
 - An [Azure API Management instance](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance) on a tier that supports MCP servers (Developer through Premium v2) (only needed for notebooks 16-23 / Part 2)
+- Nothing extra for notebooks 24-28 / Part 3 -- just `pip install -r requirements.txt`
 ## Repository structure
 
 ```text
 azure-mcp-engineering/
 ├── docs/                Conceptual reference notes, mirroring Microsoft Learn
-├── notebooks/           23 Jupyter notebooks: 01-15 fundamentals -> advanced, 16-23 APIM AI gateway/MCP
+├── notebooks/           28 Jupyter notebooks: 01-15 fundamentals, 16-23 APIM AI gateway/MCP, 24-28 protocol foundations
 ├── src/                 Reusable Python helper modules imported by the notebooks/examples
 ├── examples/            58 standalone scripts, plus examples/apim_policies/ (30 APIM policy recipes)
 ├── requirements.txt     Python dependencies for the whole course
@@ -72,26 +79,32 @@ gallery covering nearly every remaining Azure MCP Server namespace -- see
 [docs/09_example_gallery.md](docs/09_example_gallery.md) for the full index.
 ## Quick start
 
+For kernel setup, per-notebook requirements, Azure-free exercises, and
+troubleshooting, follow the [notebook run guide](docs/13_running_the_notebooks.md).
+
 ```powershell
 # 1. Clone and enter the repo
 git clone https://github.com/naveed1351/azure-mcp-engineering.git
 cd azure-mcp-engineering
 
 # 2. Create and activate a virtual environment
-python -m venv venv
-venv\Scripts\activate
+python -m venv .venv
 
 # 3. Install dependencies
-pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r .\requirements.txt
 
 # 4. Sign in to Azure (the MCP server uses your Azure CLI credential by default)
 az login
 
-# 5. Copy the environment template and fill in your Azure OpenAI values
-copy .env.example .env
+# 5. Create local configuration without overwriting an existing file.
+# Fill in Azure OpenAI values only if running the model notebooks.
+if (-not (Test-Path -LiteralPath .\.env)) {
+    Copy-Item -LiteralPath .\.env.example -Destination .\.env
+}
 
-# 6. Launch Jupyter and start with notebooks/01_introduction_to_mcp.ipynb
-jupyter notebook notebooks/
+# 6. Launch Jupyter and start with 01_introduction_to_mcp.ipynb.
+# Select this environment's kernel; see the run guide for registration.
+.\.venv\Scripts\python.exe -m notebook --notebook-dir=.\notebooks
 ```
 
 You don't need to separately install the Azure MCP Server binary: the
@@ -129,11 +142,23 @@ notebooks and examples launch it on demand via `npx -y @azure/mcp@latest`.
 | 22 | [22_end_to_end_agent_over_apim_gateway.ipynb](notebooks/22_end_to_end_agent_over_apim_gateway.ipynb) | Capstone: one agent, both chat + tools through the gateway | [docs/10_apim_ai_gateway_and_mcp.md](docs/10_apim_ai_gateway_and_mcp.md) |
 | 23 | [23_choosing_apim_vs_ai_gateway.ipynb](notebooks/23_choosing_apim_vs_ai_gateway.ipynb) | Decision guide: plain API Management vs. AI Gateway policies | [docs/11_apim_vs_ai_gateway_decision_guide.md](docs/11_apim_vs_ai_gateway_decision_guide.md) |
 
+### Part 3 — MCP protocol foundations (no Azure required)
+
+| # | Notebook | Topic | Related doc |
+| - | -------- | ----- | ------------ |
+| 24 | [24_mcp_lifecycle_and_jsonrpc.ipynb](notebooks/24_mcp_lifecycle_and_jsonrpc.ipynb) | JSON-RPC 2.0 message anatomy, the initialize/initialized handshake | [docs/12_mcp_protocol_foundations.md](docs/12_mcp_protocol_foundations.md) |
+| 25 | [25_building_a_custom_mcp_server.ipynb](notebooks/25_building_a_custom_mcp_server.ipynb) | Build a minimal MCP server from scratch with `FastMCP` | [docs/12_mcp_protocol_foundations.md](docs/12_mcp_protocol_foundations.md) |
+| 26 | [26_mcp_resources_and_prompts.ipynb](notebooks/26_mcp_resources_and_prompts.ipynb) | The resources and prompts primitives | [docs/12_mcp_protocol_foundations.md](docs/12_mcp_protocol_foundations.md) |
+| 27 | [27_mcp_sampling_and_roots.ipynb](notebooks/27_mcp_sampling_and_roots.ipynb) | Server-initiated sampling and client-exposed roots | [docs/12_mcp_protocol_foundations.md](docs/12_mcp_protocol_foundations.md) |
+| 28 | [28_mcp_transports_and_capability_recap.ipynb](notebooks/28_mcp_transports_and_capability_recap.ipynb) | Transports and capability negotiation, course-wide recap | [docs/12_mcp_protocol_foundations.md](docs/12_mcp_protocol_foundations.md) |
+
 Start at `01` and work down — later notebooks assume you understand the
-client/tool-calling patterns introduced earlier. Notebooks 16-22 assume
+client/tool-calling patterns introduced earlier. Notebooks 16-23 assume
 you've finished Part 1 and need an Azure API Management instance (any tier
 from Developer through Premium v2 supports MCP servers) in addition to the
-Azure OpenAI resource from Part 1.
+Azure OpenAI resource from Part 1. **Notebooks 24-28 need neither** — Part
+3 has no Azure dependency at all; it only uses the `mcp` package already in
+`requirements.txt`.
 ## Resources
 
 - [Azure MCP Server overview](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/overview)
@@ -142,6 +167,7 @@ Azure OpenAI resource from Part 1.
 - [Azure MCP Server tools reference](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/tools/)
 - [Azure MCP Server on GitHub](https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server)
 - [Model Context Protocol specification](https://modelcontextprotocol.io/)
+- [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 - [Overview of MCP servers in Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/mcp-server-overview)
 - [AI gateway capabilities in Azure API Management](https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities)
 - [Azure API Management policy reference — AI gateway category](https://learn.microsoft.com/en-us/azure/api-management/api-management-policies#ai-gateway)
