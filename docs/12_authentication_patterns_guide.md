@@ -46,3 +46,39 @@ set it up and the corresponding Python credential class.
 4. [Choosing the right pattern](#choosing-the-right-pattern)
 5. [Troubleshooting credential chain issues](#troubleshooting-credential-chain-issues)
 6. [Further resources](#further-resources)
+
+## Pattern 1 — Developer sign-in with the Azure CLI
+
+This is the pattern every notebook in this course uses. You sign in once
+per machine/session, and both the Azure MCP Server (via its credential
+chain mode) and this repo's Python helpers (via `DefaultAzureCredential`)
+pick up that session automatically through `AzureCliCredential`.
+
+```powershell
+# Sign in interactively (opens a browser)
+az login
+
+# If your organization has multiple tenants, be explicit:
+az login --tenant "<your-tenant-id>"
+
+# Pick the subscription everything should default to
+az account set --subscription "<your-subscription-id>"
+
+# Confirm what Azure CLI (and therefore AzureCliCredential) will report
+az account show --query "{subscription:id, tenant:tenantId, user:user.name}" --output table
+```
+
+`AzureCliCredential` works by shelling out to `az account get-access-token`
+behind the scenes — it does not read any stored password. That's why
+signing out of the CLI (`az logout`) or switching the active subscription
+with `az account set` immediately changes what every Python script and the
+Azure MCP Server itself authenticate as, with no code changes required.
+
+**When to use it:** local development, this course's notebooks, and any
+interactive terminal session where a person is present to approve the
+sign-in. It is the first pattern to reach for and the one this repository
+assumes by default.
+
+**What it is not for:** anything that needs to run unattended (a scheduled
+job, a CI pipeline, a server process with nobody watching) — `az login`
+needs either a browser or a device code a human must complete.
