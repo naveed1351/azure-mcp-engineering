@@ -58,7 +58,7 @@ azure-mcp-engineering/
 ├── docs/                Conceptual reference notes, mirroring Microsoft Learn
 ├── notebooks/           23 Jupyter notebooks: 01-15 fundamentals -> advanced, 16-23 APIM AI gateway/MCP
 ├── src/                 Reusable Python helper modules imported by the notebooks/examples
-├── examples/            54 standalone scripts, plus examples/apim_policies/ (30 APIM policy recipes)
+├── examples/            58 standalone scripts, plus examples/apim_policies/ (30 APIM policy recipes)
 ├── requirements.txt     Python dependencies for the whole course
 ├── .env.example         Template for the environment variables the code expects
 └── README.md            You are here
